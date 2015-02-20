@@ -27,7 +27,7 @@ import java.io.Serializable;
  * Elemento de una lista doblemente encadenada
  * @param <ClaseGenerica> El tipo de valor que va a almacenar este elemento
  */
-class ElementoDoblementeEnlazado<ClaseGenerica extends Comparable <? super ClaseGenerica>> implements Serializable{
+class ElementoDoblementeEnlazado<ClaseGenerica> implements Serializable{
 
 	private static final long serialVersionUID = -4319248048405830068L;
 	

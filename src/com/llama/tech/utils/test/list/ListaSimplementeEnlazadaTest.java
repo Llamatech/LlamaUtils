@@ -1,4 +1,4 @@
-package com.llama.tech.utils.test;
+package com.llama.tech.utils.test.list;
 
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.ListaSimplementeEnlazada;

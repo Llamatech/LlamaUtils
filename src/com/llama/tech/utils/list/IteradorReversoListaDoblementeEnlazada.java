@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
  * Esta clase permite recorrer una lista doblemente enlazada de manera reversa (hacia atr�s)
  * @param <ClaseGenerica> el tipo de elemento que permite obtener el iterador
  */
-public class IteradorReversoListaDoblementeEnlazada<ClaseGenerica extends Comparable <? super ClaseGenerica>> implements LlamaIterator<ClaseGenerica>, Serializable{
+public class IteradorReversoListaDoblementeEnlazada<ClaseGenerica> implements LlamaIterator<ClaseGenerica>, Serializable{
 	
 	private ElementoDoblementeEnlazado<ClaseGenerica> elementoActual;
 	
