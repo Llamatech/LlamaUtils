@@ -1,7 +1,6 @@
 package com.llama.tech.utils.dict;
 
 import com.llama.tech.utils.list.Lista;
-import com.llama.tech.utils.list.ListaDoblementeEnlazada;
 
 public class DictEntry<K, V>
 {
@@ -41,7 +40,11 @@ public class DictEntry<K, V>
 		}
 		else
 		{
-			if(next == null)
+			if(this.key.equals(key))
+			{
+				this.value = value;
+			}
+			else if(next == null)
 			{
 				next = new DictEntry<K, V>(key, value);
 			}
@@ -57,7 +60,7 @@ public class DictEntry<K, V>
 		V v = null;
 		if(key != null)
 		{
-			if(this.key.equals(key))
+			if(this.key != null && this.key.equals(key))
 			{
 				v = this.value;
 				this.value = value;

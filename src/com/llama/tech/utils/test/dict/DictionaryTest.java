@@ -172,8 +172,73 @@ public class DictionaryTest extends TestCase
 			
 		}
 		
+		try 
+		{
+			setUpEscenario3();
+			int size_pre = dict.size();
+			int value = new Random().nextInt((9999 - 3546) + 1) + 3545;
+			dict.addEntry(String.valueOf(value), value);
+			int size_post = dict.size();
+
+			LlamaIterator<String> it = dict.getKeys();
+			boolean found = false;
+			while(it.hasNext() && !found)
+			{
+				String s = it.next();
+				if(s.equals(String.valueOf(value)))
+				{
+					found = true;
+				}
+			}
+			
+			assertEquals(String.format("La nueva llave: %d, debería encontrarse en el conjunto de llaves.", value), true, found);
+			assertEquals("El nuevo tamaño del diccionario debería ser: "+size_post, size_post-1, size_pre);
+		
+			value = new Random().nextInt((9999 - 3545) + 1) + 3545;
+			dict.addEntry(String.valueOf(value), value);
+			dict.addEntry(String.valueOf(value), value+9);
+			assertEquals(String.format("El valor de la llave: %d, debería corresponder a %d.", value, value+9), value+9, (int) dict.getValue(String.valueOf(value)));
+			
+		} 
+		catch (UnhashableTypeException e) 
+		{
+			fail("La inicialización no debería ser fallida.");
+		}
 		
 	}
+	
+	public void testSetEntry()
+	{
+		setUpEscenario1();
+		try 
+		{
+			assertEquals("El método debería retornar null", null, dict.setEntry("1", 1));
+		} 
+		catch (UnhashableTypeException e) 
+		{
+			fail("El método no debería emitir una excepción.");
+		}
+		
+		try 
+		{
+			setUpEscenario2();
+			int pre_v = dict.getValue("1");
+			int extract = dict.setEntry("1", 8);
+			int post_v = dict.getValue("1");
+			
+			assertEquals("El valor a reemplazar debería ser: "+pre_v, extract, pre_v);
+			assertEquals("El nuevo valor debería corresponder a: "+8, 8, post_v);
+			
+			
+		} 
+		catch (UnhashableTypeException e) 
+		{
+			fail("El método no debería emitir una excepción.");
+		}
+		
+	}
+	
+	
 	
 	
 	
