@@ -47,13 +47,22 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 public void addEntry(K key, V value) throws UnhashableTypeException
 	 {
 		 if(key == null && value !=  null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>", key, value.toString()));
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
 		 else if(key != null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>", key.toString(), value));
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
+		 else if(key == null && value == null)
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
 		 
 		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K, V> entry = mainArea.get(pos);
-		 entry.addEntry(key, value);
+		 if(entry == null)
+		 {
+			 entry = new DictEntry<K, V>(key, value);
+		 }
+		 else
+		 {
+			 entry.addEntry(key, value);
+		 }
 		 size++;
 	 }
 	  
@@ -61,9 +70,11 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 public V setEntry(K key, V value) throws UnhashableTypeException
 	 {
 		 if(key == null && value !=  null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>", key, value.toString()));
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
 		 else if(key != null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>", key.toString(), value));
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
+		 else if(key == null && value == null)
+			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
 		 
 		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K, V> entry = mainArea.get(pos);
@@ -75,34 +86,40 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 public V removeEntry(K key)
 	 {
 		 V rem = null;
-		 int pos = key.hashCode()%mainAreaSize;
+		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K,V> primero = mainArea.get(pos);
 
-		 
-		 if(primero.getMyKey().equals(key))
+		 if(primero != null && primero.getMyValue() != null)
 		 {
-			 rem=primero.getMyValue();
-			 mainArea.set(pos, primero.getNext());
-		 }
-		 else
-		 {
-			 DictEntry<K, V> actual = primero.getNext();
-			 DictEntry<K, V> anterior = primero;
-			 while(rem!=null&&actual!=null)
+			 System.out.println("Here!");
+			 if(primero.getMyKey().equals(key))
 			 {
-				 if(actual.getMyKey().equals(key))
+				 rem=primero.getMyValue();
+				 mainArea.set(pos, primero.getNext());
+			 }
+			 else
+			 {
+				 System.out.println("Then, there");
+				 DictEntry<K, V> actual = primero.getNext();
+				 DictEntry<K, V> anterior = primero;
+				 while(rem == null && actual!=null)
 				 {
-					 rem=actual.getMyValue();
-					 anterior.setNext(actual.getNext());
+					 //System.out.println(actual.getMyKey()+":"+key);
+					 if(actual.getMyKey().equals(key))
+					 {
+						 rem=actual.getMyValue();
+						 anterior.setNext(actual.getNext());
+					 }
+					 actual=actual.getNext();
+					 anterior = anterior.getNext();
+					 
 				 }
-				 actual=actual.getNext();
-				 anterior = anterior.getNext();
-				 
 			 }
 		 }
 		 
 		 if(rem != null)
 		 {
+			 System.out.println("Yep");
 			 size--;
 		 }
 		 
@@ -113,21 +130,13 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 @Override
 	 public LlamaIterator<K> getKeys()
 	 {
-		 boolean init = false;
-		 ListaDoblementeEnlazada<K> l = null;
+		 ListaDoblementeEnlazada<K> l = new ListaDoblementeEnlazada<K>();
 		 for(int i = 0; i < mainArea.size(); i++)
 		 {
 			 DictEntry<K, V> entry = mainArea.get(i);
-			 if(entry != null)
+			 if(entry != null && entry.getMyKey() != null)
 			 {
-				 if(!init)
-				 {
-					 l = entry.getKeys();
-				 }
-				 else
-				 {
-					 l.joinList(entry.getKeys());
-				 }
+				 entry.addKeys(l);
 			 }
 		 }
 		 
@@ -137,21 +146,13 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 @Override
 	 public LlamaIterator<V> getValues()
 	 {
-		 boolean init = false;
-		 ListaDoblementeEnlazada<V> l = null;
+		 ListaDoblementeEnlazada<V> l = new ListaDoblementeEnlazada<V>();
 		 for(int i = 0; i < mainArea.size(); i++)
 		 {
 			 DictEntry<K, V> entry = mainArea.get(i);
-			 if(entry != null)
+			 if(entry != null && entry.getMyKey() != null)
 			 {
-				 if(!init)
-				 {
-					 l = entry.getValues();
-				 }
-				 else
-				 {
-					 l.joinList(entry.getValues());
-				 }
+				 entry.addValues(l);
 			 }
 		 }
 		 
@@ -166,7 +167,7 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 		 {
 			 DictEntry<K,V> entry = mainArea.get(i);
 			 entry.repr(sb);
-			 if(i < mainArea.size()-1)
+			 if(i < mainArea.size()-1 && entry.getMyKey() != null)
 			 {
 				 sb.append(',');
 			 }
@@ -179,7 +180,11 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 @Override
 	 public V getValue(K key)
 	 {
-		 int pos = key.hashCode()%mainAreaSize;
+		 int pos = key.hashCode() % mainAreaSize;
+		 if(pos < 0)
+		 {
+			 return null;
+		 }
 		 DictEntry<K, V> primero= mainArea.get(pos);
 		 
 		 return primero.getValue(key);//:D oops Jajajajaja, intervine de forma muy indecente, perdón!
@@ -199,5 +204,6 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 		 	 super(msj);
 		 }
 	 }
+	 
 	
 }

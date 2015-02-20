@@ -74,30 +74,19 @@ public class DictEntry<K, V>
 		return v;
 	}
 
-	public ListaDoblementeEnlazada<K> getKeys()
+	public void addKeys(Lista<K> l)
 	{
-		ListaDoblementeEnlazada<K> l = new ListaDoblementeEnlazada<K>();
-		addKeys(l);
-		return l;
-	}
-
-	private void addKeys(Lista<K> l)
-	{
-		l.addAlFinal(key);
+		if(key != null)
+		{
+			l.addAlFinal(key);
+		}
 		if(next != null)
 		{
 			next.addKeys(l);
 		}
 	}
 
-	public ListaDoblementeEnlazada<V> getValues()
-	{
-		ListaDoblementeEnlazada<V> l = new ListaDoblementeEnlazada<V>();
-		addValues(l);
-		return l;
-	}
-
-	private void addValues(Lista<V> l)
+	public void addValues(Lista<V> l)
 	{
 		l.addAlFinal(value);
 		if(next != null)
