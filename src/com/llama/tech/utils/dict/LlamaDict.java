@@ -29,6 +29,7 @@ import com.llama.tech.utils.list.LlamaIterator;
 public class LlamaDict<K, V> implements Dictionary<K, V>
 {
 	 private int size = 0;
+     private double capacity = 0;
 	 private int mainAreaSize = 0;
 	 private Lista<DictEntry<K, V>> mainArea;
 	 
@@ -41,6 +42,7 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 			 mainArea.addAlFinal(new DictEntry<K,V>(null, null));
 		 }
 		 mainAreaSize = len;
+       capacity = size/((double) mainAreaSize);
 	 }
 	 
 	 @Override
@@ -52,7 +54,15 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
 		 else if(key == null && value == null)
 			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
-		 
+       
+		 if(capacity >= 0.8)
+		 {
+			 dalloc(DictAlloc.INCREASE);
+		 }
+		 else if(capacity < 0.2)
+		 {
+			 dalloc(DictAlloc.DECREASE);
+		 }
 		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 if(entry == null)
@@ -85,6 +95,15 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 @Override
 	 public V removeEntry(K key)
 	 {
+		 if(capacity >= 0.8)
+		 {
+			 dalloc(DictAlloc.INCREASE);
+		 }
+		 else if(capacity < 0.2)
+		 {
+			 dalloc(DictAlloc.DECREASE);
+		 }
+		 
 		 V rem = null;
 		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K,V> primero = mainArea.get(pos);
@@ -191,6 +210,44 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 }
 	//FUe bastante pertienente la intervencion!
 	 
+   public void dalloc(DictAlloc op)
+   {
+            int delta = mainAreaSize;
+            if(op == DictAlloc.INCREASE)
+            {
+               delta = mainAreaSize*2;
+            }
+            else if(op == DictAlloc.DECREASE)
+            {
+               delta = (int) (mainAreaSize/2);
+            }
+            
+            if(delta > 0)
+            {
+	            Lista<DictEntry<K,V>> mainAreaTemp = new LlamaArrayList<DictEntry<K,V>>(delta);
+	            for(int i = 0; i < delta; i++)
+	            {
+	                 mainAreaTemp.addAlFinal(new DictEntry<K,V>(null, null));
+	            }
+	
+	            LlamaIterator<K> keys = getKeys();
+	            LlamaIterator<V> values = getValues();
+	
+	            while(keys.hasNext())
+	            {
+	                 K key = keys.next();
+	                 V value = values.next();
+	                 int pos = key.hashCode() % delta;
+	                 DictEntry<K, V> entry = mainAreaTemp.get(pos);
+	                 entry.addEntry(key, value);
+	            }
+	            
+	            mainArea = mainAreaTemp;
+	            mainAreaSize = delta;
+	            capacity = size/((double) mainAreaSize);
+            }
+   }
+   
 	 @Override
 	 public int size()
 	 {
@@ -204,6 +261,12 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 		 	 super(msj);
 		 }
 	 }
+
+    private static enum DictAlloc
+    { 
+       INCREASE,
+       DECREASE
+    }
 	 
 	
 }
