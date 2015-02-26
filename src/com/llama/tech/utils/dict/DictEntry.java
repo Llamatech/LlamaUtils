@@ -20,10 +20,16 @@
 
 package com.llama.tech.utils.dict;
 
+import java.io.Serializable;
+
 import com.llama.tech.utils.list.Lista;
 
-public class DictEntry<K, V>
+public class DictEntry<K, V> implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1359144748660811661L;
 	private DictEntry<K,V> next;
 	private K key;
 	private V value;
@@ -36,15 +42,18 @@ public class DictEntry<K, V>
 
 	public V getValue(K key)
 	{
-		if(this.key.equals(key))
+		if(key != null)
 		{
-			return value;
-		}
-		else
-		{
-			if(next != null)
+			if(this.key.equals(key))
 			{
-				return next.getValue(key);
+				return value;
+			}
+			else
+			{
+				if(next != null)
+				{
+					return next.getValue(key);
+				}
 			}
 		}
 		//Aquí no llega, miento, si llega! JAjaja pero es posible! Qué pasa si se busca un ele,emto inexistente? Jajaja, por eso me retracté!

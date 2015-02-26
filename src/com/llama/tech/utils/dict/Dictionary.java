@@ -20,10 +20,12 @@
 
 package com.llama.tech.utils.dict;
 
+import java.io.Serializable;
+
 import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public interface Dictionary<K, V>
+public interface Dictionary<K, V> extends Serializable
 {
 	/**
 	 * Retorna el valor que corresponde a la llave dada por parámetro. 

@@ -21,12 +21,14 @@
 
 package com.llama.tech.utils.dict;
 
+import java.io.Serializable;
+
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.ListaDoblementeEnlazada;
 import com.llama.tech.utils.list.LlamaArrayList;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaDict<K, V> implements Dictionary<K, V>
+public class LlamaDict<K, V> implements Dictionary<K, V>, Serializable
 {
 	 private int size = 0;
      private double capacity = 0;
@@ -42,7 +44,7 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 			 mainArea.addAlFinal(new DictEntry<K,V>(null, null));
 		 }
 		 mainAreaSize = len;
-       capacity = size/((double) mainAreaSize);
+         capacity = size/((double) mainAreaSize);
 	 }
 	 
 	 @Override
@@ -55,15 +57,16 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 		 else if(key == null && value == null)
 			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
        
+		 capacity = size/((double) mainAreaSize);
 		 if(capacity >= 0.8)
 		 {
 			 dalloc(DictAlloc.INCREASE);
 		 }
-		 else if(capacity < 0.2)
-		 {
-			 dalloc(DictAlloc.DECREASE);
-		 }
+	
+		 
 		 int pos = key.hashCode() % mainAreaSize;
+		 System.out.println(key+":"+pos);
+		 
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 if(entry == null)
 		 {
@@ -86,6 +89,7 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 		 else if(key == null && value == null)
 			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
 		 
+		 
 		 int pos = key.hashCode() % mainAreaSize;
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 
@@ -95,11 +99,8 @@ public class LlamaDict<K, V> implements Dictionary<K, V>
 	 @Override
 	 public V removeEntry(K key)
 	 {
-		 if(capacity >= 0.8)
-		 {
-			 dalloc(DictAlloc.INCREASE);
-		 }
-		 else if(capacity < 0.2)
+		 capacity = size/((double) mainAreaSize);
+		 if(capacity < 0.2)
 		 {
 			 dalloc(DictAlloc.DECREASE);
 		 }
