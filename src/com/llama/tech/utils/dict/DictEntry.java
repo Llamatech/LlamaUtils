@@ -42,7 +42,7 @@ public class DictEntry<K, V> implements Serializable
 
 	public V getValue(K key)
 	{
-		if(key != null)
+		if(this.key != null && key != null)
 		{
 			if(this.key.equals(key))
 			{
