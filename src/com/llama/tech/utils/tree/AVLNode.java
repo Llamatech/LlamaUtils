@@ -185,102 +185,139 @@ public class AVLNode <T extends Comparable<T>>
 		{
 			if(!this.balanced())
 			{
+				if(this.right.right != null && this.right.left ==  null)
+				{
+					this.right.parent = this.parent;
+					if(this.right.parent != null)
+					{
+						this.right.parent.right = this.right;
+					}
+					this.parent = this.right;
+					this.right.left = this;
+					this.right = null;
+					this.left = null;
+					this.balanceFactor = 1;
+				}
+				else if(this.right.right == null && this.right.left != null)
+				{
+					this.right.left.parent = this.parent;
+					if(this.right.left.parent != null)
+					{
+						this.right.left.parent.right = this.right.left;
+					}
+					this.parent = this.right.left;
+					this.right.left.left = this;
+					this.right.left.right = this.right;
+					this.right.parent = this.parent;
+					this.right.right = null;
+					this.right.left = null;
+					this.right.balanceFactor = 1;
+					this.right = null;
+					this.left = null;
+					this.balanceFactor = 1;
+				}
+				return this.parent.recalculateHeight();
 				
 			}
+			this.balanceFactor = 1+this.right.recalculateHeight();
 		}
+		else if(this.left != null && this.right != null)
+		{
+			int leftLoad = this.left.recalculateHeight();
+			int rightLoad = this.right.recalculateHeight();
+			if(leftLoad >= rightLoad+2)
+			{
+				if(this.left.right.left != null)
+				{
+					this.left.right.parent = this.parent;
+					this.parent = this.left.right;
+					if(this.parent.parent != null)
+					{
+						this.parent.parent.left = this.parent;
+					}
+					this.parent.right = this;
+					//TODO 
+				}
+			}
+		}
+			
+//		       elif self.left is not None and self.right is not None:
+//		           if leftLoad >= rightLoad+2:
+//		              if self.left.right.left is not None:
+//		                 self.left.right.parent = self.parent
+//		                 self.parent = self.left.right
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.left = self.parent
+//		                 self.parent.right = self
+//		                 self.left.parent = self.parent
+//		                 node = self.parent.left
+//		                 node.parent = self.left
+//		                 self.left.right = node
+//		                 self.parent.left = self.left
+//		                 self.left = None
+//		              elif self.left.right.right is not None:
+//		                 self.left.right.parent = self.parent
+//		                 self.parent = self.left.right
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.left = self.parent
+//		                 node = self.parent.right
+//		                 self.parent.right = self
+//		                 self.parent.left = self.left
+//		                 self.left.parent = self.parent
+//		                 node.parent = self
+//		                 self.left.right = None
+//		                 self.left = node
+//		              elif self.left.left.left is not None or self.left.left.right is not None:
+//		                 self.left.parent = self.parent
+//		                 self.parent = self.left
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.left = self.parent
+//		                 node = self.parent.right
+//		                 self.left = node
+//		                 node.parent = self
+//		                 self.parent.right = self 
+//		              return self.parent.recalculateHeight()
+//		           elif rightLoad >= leftLoad+2:
+//		              if self.right.right.right is not None or self.right.right.left is not None:
+//		                 self.right.parent = self.parent
+//		                 self.parent = self.right
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.right = self.parent
+//		                 node = self.parent.left
+//		                 self.right = node
+//		                 node.parent = self
+//		                 self.parent.left = self
+//		              elif self.right.left.right is not None:
+//		                 self.right.left.parent = self.parent
+//		                 self.parent = self.right.left
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.right = self.parent
+//		                 self.parent.left = self
+//		                 node = self.parent.right
+//		                 self.parent.right = self.right
+//		                 self.right.parent = self.parent
+//		                 self.right.left = node
+//		                 node.parent = self.right
+//		                 self.right = None
+//		              elif self.right.left.left is not None:
+//		                 self.right.left.parent = self.parent
+//		                 self.parent = self.right.left
+//		                 if self.parent.parent != None:
+//		                    self.parent.parent.right = self.parent
+//		                 node = self.parent.left
+//		                 self.parent.left = self
+//		                 self.parent.right = self.right
+//		                 self.right.parent = self.parent
+//		                 self.right.left = None
+//		                 self.right = node
+//		                 node.parent = self
+//		              return self.parent.recalculateHeight()
+//		           self.balanceFactor = 1+max(leftLoad, rightLoad)
+		
+		return this.balanceFactor;
 	}
 	
-//	def recalculateHeight(self):
-//	       elif self.left is None and self.right is not None:
-//	          if not self.balanced():
-//	             if self.right.right is not None and self.right.left is None:
-//	                self.right.parent = self.parent
-//	                if self.right.parent is not None:
-//	                   self.right.parent.right = self.right
-//	                self.parent = self.right
-//	                self.right.left = self
-//	                self.right = None
-//	                self.left = None
-//	                self.balanceFactor = 1
-//	             elif self.right.right is None and self.right.left is not None:
-//	                self.right.left.parent = self.parent
-//	                if self.right.left.parent is not None:
-//	                   self.right.left.parent.right = self.right.left
-//	                self.parent = self.right.left
-//	                self.right.left.left = self
-//	                self.right.left.right = self.right
-//	                self.right.parent = self.right.left
-//	                self.right.right = None
-//	                self.right.left = None
-//	                self.right.balanceFactor = 1
-//	                self.right = None
-//	                self.left = None
-//	                self.balanceFactor = 1
-//	             return self.parent.recalculateHeight()
-//	          self.balanceFactor = 1+self.right.recalculateHeight()
-//	       elif self.left is not None and self.right is not None:
-//	          leftLoad = self.left.recalculateHeight()
-//	          rightLoad = self.right.recalculateHeight()
-//	          if leftLoad >= rightLoad+2:
-//	             if self.left.right.left is not None:
-//	                self.left.right.parent = self.parent
-//	                self.parent = self.left.right
-//	                self.parent.right = self
-//	                self.left.parent = self.parent
-//	                node = self.parent.left
-//	                node.parent = self.left
-//	                self.left.right = node
-//	                self.parent.left = self.left
-//	                self.left = None
-//	             elif self.left.right.right is not None:
-//	             	self.left.right.parent = self.parent
-//	                self.parent = self.left.right
-//	                node = self.parent.right
-//	                self.parent.right = self
-//	                self.parent.left = self.left
-//	                self.left.parent = self.parent
-//	                node.parent = self
-//	                self.left.right = None
-//	                self.left = node
-//	             elif self.left.left.left is not None or self.left.left.right is not None:
-//	                self.left.parent = self.parent
-//	                self.parent = self.left
-//	                node = self.parent.right
-//	                self.left = node
-//	                node.parent = self
-//	                self.parent.right = self 
-//	             return self.parent.recalculateHeight()
-//	          elif rightLoad >= leftLoad+2:
-//	             if self.right.right.right is not None or self.right.right.left is not None:
-//	                self.right.parent = self.parent
-//	                self.parent = self.right
-//	                node = self.parent.left
-//	                self.right = node
-//	                node.parent = self
-//	                self.parent.left = self
-//	             elif self.right.left.right is not None:
-//	                self.right.left.parent = self.parent
-//	                self.parent = self.right.left
-//	                self.parent.left = self
-//	                node = self.parent.right
-//	                self.parent.right = self.right
-//	                self.right.parent = self.parent
-//	                self.right.left = node
-//	                node.parent = self.right
-//	                self.right = None
-//	             elif self.right.left.left is not None:
-//	                self.right.left.parent = self.parent
-//	                self.parent = self.right.left
-//	                node = self.parent.left
-//	                self.parent.left = self
-//	                self.parent.right = self.right
-//	                self.right.parent = self.parent
-//	                self.right.left = None
-//	                self.right = node
-//	                node.parent = self
-//	             return self.parent.recalculateHeight()
-//	          self.balanceFactor = 1+max(leftLoad, rightLoad)
-//	       return self.balanceFactor
+
 	
 	
 	@Override
