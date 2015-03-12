@@ -40,8 +40,8 @@ public class DictionaryTest extends TestCase
 		setUpEscenario1();
 		try
 		{
-			dict.getValue("0");
-			fail("El método debería lanzar una excepción");
+			//dict.getValue("0");
+			assertEquals("El método debería retornar null", null, dict.getValue("0"));
 		}
 		catch(Exception a)
 		{
