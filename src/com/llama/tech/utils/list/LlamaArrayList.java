@@ -22,7 +22,7 @@ package com.llama.tech.utils.list;
 
 import java.io.Serializable;
 
-public class LlamaArrayList<T extends Comparable<T>> implements Lista<T>, Serializable{
+public class LlamaArrayList<T> implements Lista<T>, Serializable{
 
 	private T[] lista;
 	int posActual;

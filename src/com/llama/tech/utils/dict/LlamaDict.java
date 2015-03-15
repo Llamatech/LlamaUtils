@@ -65,7 +65,6 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 	
 		 
 		 int pos = key.hashCode() % mainAreaSize;
-		 System.out.println(key+":"+pos);
 		 
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 if(entry == null)

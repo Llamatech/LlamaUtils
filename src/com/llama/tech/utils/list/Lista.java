@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 
 
-public interface Lista<ClaseGenerica extends Comparable<ClaseGenerica>> extends Serializable, Iterable<ClaseGenerica>
+public interface Lista<ClaseGenerica> extends Serializable, Iterable<ClaseGenerica>
 {
 	/**
 	 * Agrega un elemento al final de la lista

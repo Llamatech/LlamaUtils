@@ -74,6 +74,12 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	 * Agrega los elementos de un arreglo al árbol.
 	 * @param list El arreglo a copiar. list != null.
 	 */
+	public void copyArray(T[] list);
+	
+	/**
+	 * Agrega los elementos de un arreglo al árbol.
+	 * @param list El arreglo a copiar. list != null.
+	 */
 	public void arrayCopy(T[] list);
 	
 	/**
@@ -84,7 +90,7 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 
 	/**
 	 * Retorna los elementos actuales del árbol en un arreglo ordenado. 
-	 * @return
+	 * @return el arreglo con los elementos del árbol.
 	 */
 	public T[] toArray();
 
@@ -114,6 +120,10 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	 */
 	public boolean removeAll(Lista<T> c);
 	
-	
-	
+	/**
+	 * Retorna si el árbol se encuentra balanceado.
+	 * @return true, si se encuentra balanceado. false, de lo contrario.
+	 */
+	public boolean isBalanced();
+
 }

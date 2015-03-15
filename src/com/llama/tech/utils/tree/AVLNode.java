@@ -544,8 +544,8 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Realiza el recorrido en preorden del árbol, no requiere de una lista auxiliar.
+	 * @return el nodo visitado actualmente.
 	 */
 	public AVLNode<T> markVisited()
 	{
@@ -601,6 +601,10 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 		return null;
 	}
 	
+	/**
+	 * Calcula la altura del subárbol. Además establece si el subárbol debe ser balanceado.
+	 * @return la altura del subárbol.
+	 */
 	private int calculateHeight()
 	{
 		if(this.left != null && this.right == null)
@@ -691,6 +695,7 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	{
 		return o.data.compareTo(this.data);
 	}
+	
 	
    
 }

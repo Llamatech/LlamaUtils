@@ -22,7 +22,6 @@ package com.llama.tech.utils.tree;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaIterator;
@@ -68,20 +67,22 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 					root = root.getParent();
 				}
 				size++;
+				return true;
 			}
 		}
 		else
 		{
 			root = new AVLNode<T>(item);
 			size++;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
 	public T remove(T item) 
 	{
-		if(size > 1)
+		if(size >= 1)
 		{
 			if(root.contains(item))
 			{
@@ -113,6 +114,7 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		{
 			root = new AVLNode<T>(list.get(0));
 			startFrom = 1;
+			size++;
 		}
 		for(T item: list)
 		{
@@ -122,7 +124,30 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 			}
 			else
 			{
-				root.add(item);
+				add(item);
+			}
+		}
+	}
+	
+	@Override
+	public void copyArray(T[] list) 
+	{
+		int startFrom = 0; 
+		if(root == null)
+		{
+			root = new AVLNode<T>(list[0]);
+			startFrom = 1;
+			size++;
+		}
+		for(T item: list)
+		{
+			if(startFrom == 0)
+			{
+				startFrom = 1;
+			}
+			else
+			{
+				add(item);
 			}
 		}
 	}
@@ -163,6 +188,7 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T[] toArray() 
 	{
@@ -225,33 +251,41 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		size = 0;
 	}
 	
-	private boolean balanced()
+	@Override
+	public boolean isBalanced() 
 	{
-		root.toConsole(root);
-		return root.balanced();
+		if(root != null)
+		{
+			return root.balanced();
+		}
+		
+		return true;
 	}
 	
-	public static void main(String... args)
+	public void toConsole()
 	{
-		Random r = new Random();
-		LlamaAVLTree <Integer> tree = new LlamaAVLTree <Integer>();
-		for(int i = 0; i < 10; i++)
-		{
-			tree.add(i);
-		}
-		
-		System.out.println(tree.balanced());
-		//Iterator<Integer> it = tree.iterator();
-		Integer[] l = new Integer[tree.size];
-		tree.arrayCopy(l);
-		for(int i: l)
-		{
-			System.out.println(i);
-		}
-		
-		
-
+		root.toConsole(root);
 	}
+	
+    public static void main(String[] args) 
+    {
+    	LlamaAVLTree<Integer> tree = new LlamaAVLTree<Integer>();
+    	tree.add(3970);
+    	tree.add(2839);
+    	tree.add(3204);
+    	tree.add(1021);
+    	tree.add(2544);
+    	tree.add(355);
+    	tree.add(3332);
+    	tree.add(402);
+    	tree.add(3169);
+    	tree.add(3902);
+        tree.add(1425);
+        tree.add(1173);
+        tree.add(965);
+    	tree.toConsole();
+	}
+	
 	
 	private static class LlamaTreeIterator<T extends Comparable<T>> implements LlamaIterator<T>
 	{
@@ -309,12 +343,4 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		}
 		
 	}
-	
-	
-	
-	
-
-
-	
-
 }
