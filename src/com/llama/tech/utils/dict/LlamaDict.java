@@ -28,7 +28,7 @@ import com.llama.tech.utils.list.ListaDoblementeEnlazada;
 import com.llama.tech.utils.list.LlamaArrayList;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaDict<K, V> implements Dictionary<K, V>, Serializable
+public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> implements Dictionary<K, V>, Serializable
 {
 	 private int size = 0;
      private double capacity = 0;

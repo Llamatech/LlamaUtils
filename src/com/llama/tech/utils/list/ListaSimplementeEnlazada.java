@@ -22,7 +22,7 @@ package com.llama.tech.utils.list;
 
 import java.io.Serializable;
 
-public class ListaSimplementeEnlazada<ClaseGenerica> implements Lista<ClaseGenerica>,Serializable{
+public class ListaSimplementeEnlazada<ClaseGenerica extends Comparable<ClaseGenerica>> implements Lista<ClaseGenerica>,Serializable{
 
 	private static final long serialVersionUID = -8642976904815421465L;
 	

@@ -21,10 +21,11 @@
 package com.llama.tech.utils.list;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 
 
-public interface Lista<ClaseGenerica> extends Serializable
+public interface Lista<ClaseGenerica extends Comparable<ClaseGenerica>> extends Serializable, Iterable<ClaseGenerica>
 {
 	/**
 	 * Agrega un elemento al final de la lista
@@ -108,9 +109,9 @@ public interface Lista<ClaseGenerica> extends Serializable
 	 * Metodo que genera un iterador para recorrer la lista
 	 * @return Un iterador sobre la lista
 	 */
-	public LlamaIterator<ClaseGenerica> iterator();
+	public Iterator<ClaseGenerica> iterator();
 	
-	public LlamaIterator<ClaseGenerica> reverseIterator();
+	public Iterator<ClaseGenerica> reverseIterator();
 	
 	/**
 	 * Metodo que genera un iterador para recorrer la lista. El iterador empieza en la posici�n pos
@@ -118,7 +119,7 @@ public interface Lista<ClaseGenerica> extends Serializable
 	 * @return Un iterador sobre la lista.
 	 * @throws IndexOutOfBoundsException Si la posici�n no existe
 	 */
-	public LlamaIterator<ClaseGenerica> iterator(int pos)throws IndexOutOfBoundsException;
+	public Iterator<ClaseGenerica> iterator(int pos)throws IndexOutOfBoundsException;
 
 	/**
 	 * M�todo que elimina un elemento de la lista.

@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 import com.llama.tech.utils.list.Lista;
 
-public class DictEntry<K, V> implements Serializable
+public class DictEntry<K extends Comparable<K>, V extends Comparable<V>> implements Serializable, Comparable<DictEntry<K, V>>
 {
 	/**
 	 * 
@@ -160,6 +160,12 @@ public class DictEntry<K, V> implements Serializable
 			sb.append(',');
 			next.repr(sb);
 		}
+	}
+
+	@Override
+	public int compareTo(DictEntry<K, V> o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
