@@ -168,9 +168,9 @@ public class TreeTest extends TestCase
 	    
 	    setupEscenario1();
 		assertNull("El árbol no contiene elementos", tree.get(0));
-		Integer[] l = new Integer[2000];
+		Integer[] l = new Integer[4000];
 		Dictionary<Integer, Integer> d = new LlamaDict<Integer, Integer>(20);
-		for(int i = 0; i < 30; i++)
+		for(int i = 0; i < 4000; i++)
 		{
 			l[i] = new Random().nextInt(4000)+1;
 			while(d.getValue(l[i]) != null)
@@ -181,7 +181,6 @@ public class TreeTest extends TestCase
 			{
 				d.addEntry(l[i], l[i]);
 				tree.add(l[i]);
-				System.out.println(l[i]);
 			} 
 			catch (UnhashableTypeException e) 
 			{
@@ -190,7 +189,6 @@ public class TreeTest extends TestCase
 		}
 		
 		Iterator<Integer> it = d.getKeys();
-		System.out.println(tree);
 		while(it.hasNext())
 		{
 			int next = it.next();
@@ -247,22 +245,22 @@ public class TreeTest extends TestCase
 			try 
 			{
 				d.addEntry(l[i], l[i]);
-				tree.add(l[i]);
+				//tree.add(l[i]);
 			} 
 			catch (UnhashableTypeException e) 
 			{
 				fail("El método no debería arrojar excepción.");
 			}
 		}
+		tree.copyArray(l);
 		int len = d.size();
 		assertEquals(String.format("La cantidad de elementos en el árbol debería ser %d", len), len, tree.size());
 		assertEquals("El árbol debería estar balanceado", true, tree.isBalanced());
 		Iterator<Integer> it = d.getKeys();
-		System.out.println(tree);
+
 		while(it.hasNext())
 		{
 			int item = it.next();
-			System.out.println(item);
 			assertEquals(String.format("El elemento %d debería estar en el árbol", item), item, (int) tree.get(item));
 		}
 		

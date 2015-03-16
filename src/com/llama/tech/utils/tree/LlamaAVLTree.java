@@ -283,6 +283,13 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
         tree.add(1425);
         tree.add(1173);
         tree.add(965);
+        tree.add(3997);
+        tree.add(2426);
+    	tree.toConsole();
+    	for(Integer i : tree)
+    	{
+    	}    	
+    	tree.add(3008);
     	tree.toConsole();
 	}
 	
@@ -301,7 +308,12 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		public LlamaTreeIterator(AVLNode<T> root)
 		{
 			this.root = root;
-			item = root.markVisited().getValue();
+			AVLNode<T> node = root.markVisited();
+			item = node.getValue();
+			if(item != null)
+			{
+				System.out.println("Item: "+item+" Parent: "+node.getParent().getValue());
+			}
 		}
 		
 		@Override
@@ -309,7 +321,13 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		{
 			try
 			{
-				next = root.markVisited().getValue();
+				AVLNode<T> node = root.markVisited();
+				next = node.getValue();
+				if(next != null)
+				{
+					System.out.println("Item: "+next+" Parent: "+node.getParent().getValue());
+				}
+				
 			}
 			catch(Exception e)
 			{

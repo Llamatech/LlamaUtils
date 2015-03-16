@@ -235,19 +235,23 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	{
 		AVLNode<T> left = this.left;
 		left.parent = this.parent;
-		if(left.parent != null)
+		if(this.parent != null)
 		{
-			if(left.parent.left != null && this.compareTo(left.parent.left) == 0)
+			if(this.parent.left != null && this.compareTo(this.parent.left) == 0)
 			{
-				left.parent.left = left;
+				this.parent.left = left;
 			}
-			else if(left.parent.right != null && this.compareTo(left.parent.right) == 0)
+			else if(this.parent.right != null && this.compareTo(this.parent.right) == 0)
 			{
-				left.parent.right = left;
+				this.parent.right = left;
 			}
 			//left.parent.left = left;
 		}
 		this.left = left.right;
+		if(this.left != null)
+		{
+			this.left.parent = this;
+		}
 		left.right = this;
 		this.parent = left;
 		//left.calculateHeight();
@@ -274,6 +278,10 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 			}
 		}
 		this.right = right.left;
+		if(this.right != null)
+		{
+			this.right.parent = this;
+		}
 		right.left = this;
 		this.parent = right;
 		return right;
@@ -678,8 +686,8 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 		try
 		{
 			System.out.println("Root: "+tree.data);
-			System.out.println("Left: "+tree.left+"("+tree.left.data+")");
-			System.out.println("Right: "+tree.right+"("+tree.right.data+")");
+			System.out.println("Left: "+tree.left+"("+tree.left.data+";"+tree.left.left.data+";"+tree.left.right.data+")");
+			System.out.println("Right: "+tree.right+"("+tree.right.data+";"+tree.right.left.data+";"+tree.right.right.data+")");
 			System.out.println("Height: "+tree.getBalanceFactor());
 		}
 		catch(Exception e)
