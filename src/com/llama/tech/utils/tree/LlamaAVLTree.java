@@ -267,31 +267,6 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		root.toConsole(root);
 	}
 	
-    public static void main(String[] args) 
-    {
-    	LlamaAVLTree<Integer> tree = new LlamaAVLTree<Integer>();
-    	tree.add(3970);
-    	tree.add(2839);
-    	tree.add(3204);
-    	tree.add(1021);
-    	tree.add(2544);
-    	tree.add(355);
-    	tree.add(3332);
-    	tree.add(402);
-    	tree.add(3169);
-    	tree.add(3902);
-        tree.add(1425);
-        tree.add(1173);
-        tree.add(965);
-        tree.add(3997);
-        tree.add(2426);
-    	tree.toConsole();
-    	for(Integer i : tree)
-    	{
-    	}    	
-    	tree.add(3008);
-    	tree.toConsole();
-	}
 	
 	
 	private static class LlamaTreeIterator<T extends Comparable<T>> implements LlamaIterator<T>
@@ -308,11 +283,10 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		public LlamaTreeIterator(AVLNode<T> root)
 		{
 			this.root = root;
-			AVLNode<T> node = root.markVisited();
-			item = node.getValue();
-			if(item != null)
+			if(root != null)
 			{
-				System.out.println("Item: "+item+" Parent: "+node.getParent().getValue());
+				AVLNode<T> node = root.markVisited();
+				item = node.getValue();
 			}
 		}
 		
@@ -323,10 +297,6 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 			{
 				AVLNode<T> node = root.markVisited();
 				next = node.getValue();
-				if(next != null)
-				{
-					System.out.println("Item: "+next+" Parent: "+node.getParent().getValue());
-				}
 				
 			}
 			catch(Exception e)
