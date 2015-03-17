@@ -20,6 +20,9 @@
 
 package com.llama.tech.utils.tree;
 
+import java.io.FileNotFoundException;
+import java.util.Comparator;
+
 import com.llama.tech.utils.list.Lista;
 
 public interface Tree<T extends Comparable<T>> extends Iterable<T>
@@ -32,11 +35,27 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	public boolean add(T item);
 	
 	/**
+	 * Agrega un elemento al árbol, usando un comparador específico.
+	 * @param item El elemento a ser agregado. item != null;
+	 * @param comp El comparador específico para ordenar los elementos. comp != null. 
+	 * @return true si el elemento fue agregado, false, de lo contrario.
+	 */
+	public boolean add(T item, Comparator<T> comp);
+	
+	/**
 	 * Retorna un elemento que se encuentra en el árbol.
 	 * @param item El objeto a buscar. item != null.
 	 * @return El elemento a buscar. null, si el elemento no fue encontrado.
 	 */
 	public T get(T item);
+	
+	/**
+	 * Retorna un elemento que se encuentra en el árbol, usando un comparador específico.
+	 * @param item El objeto a buscar. item != null.
+	 * @param comp El comparador específico que describe el orden de los elementos en el árbol. comp != null.
+	 * @return El elemento a buscar. null, si el elemento no fue encontrado.
+	 */
+	public T get(T item, Comparator<T> comp);
     
 	/**
 	 * Elimina un elemento del árbol.
@@ -44,6 +63,14 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	 * @return El elemento eliminado. null, si no se encuentra en el árbol.
 	 */
 	public T remove(T item);
+	
+	/**
+	 * Elimina un elemento del árbol, usando un comparador específico.
+	 * @param item El elemento a ser eliminado. item != null.
+	 * @param comp El comparador con el cual los elementos se encuentran ordenados en el árbol. comp != null.
+	 * @return El elemento eliminado. null, si no se encuentra en el árbol.
+	 */
+	public T remove(T item, Comparator<T> comp);
 	
 	/**
 	 * Retorna el número de elementos agregados al árbol.
@@ -63,6 +90,15 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	 * @return true, si el elemento se encuentra en el árbol, false, de lo contrario.
 	 */
 	public boolean contains(T item);
+	
+	/**
+	 * Establece si un elemento se encuentra en el árbol, de acuerdo al comparador por el cual,
+	 * el árbol se encuentra ordenado.
+	 * @param item El elemento a ser localizado. item != null.
+	 * @param comp El comparador específico por el cual el árbol se encuentra ordenado. comp != null. 
+	 * @return true, si el elemento se encunetra en el árbol, false, de lo contrario.
+	 */
+	public boolean contains(T item, Comparator<T> comp);
 	
 	/**
 	 * Agrega los elementos de una lista al árbol.
@@ -125,5 +161,9 @@ public interface Tree<T extends Comparable<T>> extends Iterable<T>
 	 * @return true, si se encuentra balanceado. false, de lo contrario.
 	 */
 	public boolean isBalanced();
+	
+	public String toXML();
+	
+	public void writeXML() throws FileNotFoundException;
 
 }

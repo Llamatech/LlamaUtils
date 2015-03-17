@@ -20,7 +20,11 @@
 
 package com.llama.tech.utils.tree;
 
-public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
+import java.util.Comparator;
+
+import com.llama.tech.misc.XMLFormat;
+
+public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comparable<AVLNode<T>> 
 {
 	private T data;
 	private AVLNode<T> parent;
@@ -109,11 +113,73 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	}
 	
 	/**
+	 * Establece si un elemento corresponde al nodo presente, o se encuentra en el subárbol correspondiente,
+	 * conforme a un comparador de los elementos agregados al árbol.
+	 * @param item El elemento a buscar. item != null.
+	 * @param comp El comparador de los elementos. comp != null.
+	 * @return true, si el elemento existe. false, de lo contrario.
+	 */
+	public boolean contains(T item, Comparator<T> comp)
+	{
+		if(comp.compare(item, this.data) == 0)
+		{
+			return true;
+		}
+		else if(comp.compare(item, this.data) > 0)
+		{
+			if(right != null)
+			{
+				return right.contains(item, comp);
+			}
+			return false;
+		}
+		else
+		{
+			if(left != null)
+			{
+				return left.contains(item, comp);
+			}
+			return false;
+		}
+	}
+	
+	/**
 	 * Busca un elemento en el subárbol que lleva por raíz, el nodo actual.
 	 * @param item El elemento a buscar.
 	 * @return el elemento a buscar, null si no fue hallado.
 	 */
 	public T get(T item)
+	{
+		if(item.compareTo(this.data) == 0)
+		{
+			return this.data;
+		}
+		else if(item.compareTo(this.data) > 0)
+		{
+			if(right != null)
+			{
+				return right.get(item);
+			}
+			return null;
+		}
+		else
+		{
+			if(left != null)
+			{
+				return left.get(item);
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * Busca un elemento en el subárbol que lleva por raíz, el nodo actual. La búsqueda se realiza de acuerdo
+	 * al comparador por el cual el árbol se encuentra ordenado.
+	 * @param item El elemento a buscar. item != null.
+	 * @param comp El comparador que describe el orden de los elementos. comp != null. 
+	 * @return el elemento a buscar, null si no fue hallado.
+	 */
+	public T get(T item, Comparator<T> comp)
 	{
 		if(item.compareTo(this.data) == 0)
 		{
@@ -355,6 +421,40 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	}
 	
 	/**
+	 * Agrega un elemento al subárbol, de acuerdo a un comparador que establece el orden entre dos elementos.
+	 * @param item el elemento a agregar. El elemento no se encuentra en el árbol.
+	 * @param comp el comparador que describe el orden de los elementos.
+	 */
+	public void add(T item, Comparator<T> comp)
+	{
+		if(comp.compare(item, this.data) > 0)
+		{
+			if(this.right == null)
+			{
+				this.right = new AVLNode<T>(item, this);
+			}
+			else
+			{
+				this.right.add(item);
+			}
+		}
+		else
+		{
+			if(this.left == null)
+			{
+				this.left = new AVLNode<T>(item, this);
+			}
+			else
+			{
+				this.left.add(item);
+			}
+		}
+
+		this.calculateHeight();
+		
+	}
+	
+	/**
 	 * Elimina un elemento de un subárbol.
 	 * @param item el elemento a ser eliminado.
 	 */
@@ -458,6 +558,111 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	}
 	
 	/**
+	 * Elimina un elemento de un subárbol, de acuerdo al comparador que describe el orden de los elementos en
+	 * el árbol.
+	 * @param item el elemento a ser eliminado.
+	 * @param comp el comparador que describe el orden de los elementos.
+	 */
+	private void removeNode(T item, Comparator<T> comp)
+	{
+		if(comp.compare(this.data, item) == 0)
+		{
+			if(this.left != null && this.right != null)
+			{
+				AVLNode<T> left = this.left;
+				AVLNode<T> replacement = left;
+				while(replacement.right != null)
+				{
+					replacement = replacement.right;
+				}
+				
+				replacement.parent.right = null;
+				replacement.parent = this.parent;
+				replacement.left = left;
+				replacement.right = this.right;
+				left.parent = replacement;
+               
+				if (this.parent.left != null && this.compareTo(this.parent.left) == 0) 
+				{
+					this.parent.left = replacement;
+				} 
+				else if (this.parent.right != null && this.compareTo(this.parent.right) == 0) 
+				{
+					this.parent.right = replacement;
+				}
+				
+				this.left = null;
+			    this.right = null;
+			    this.parent = null;
+			    replacement.calculateHeight();
+			}
+			else if(this.left == null && this.right != null)
+			{
+				AVLNode<T> right = this.right;
+				right.parent = this.parent;
+				if (this.parent.left != null && this.compareTo(this.parent.left) == 0) 
+				{
+					this.parent.left = right;
+				} 
+				else if (this.parent.right != null && this.compareTo(this.parent.right) == 0) 
+				{
+					this.parent.right = right;
+				}
+				
+				this.right = null;
+				this.parent = null;
+				right.calculateHeight();
+			}
+			else if(this.left != null && this.right == null)
+			{
+				AVLNode<T> left = this.left;
+				left.parent = this.parent;
+				
+				if (this.parent.left != null && this.compareTo(this.parent.left) == 0) 
+				{
+					this.parent.left = left;
+				} 
+				else if (this.parent.right != null && this.compareTo(this.parent.right) == 0) 
+				{
+					this.parent.right = left;
+				}
+				
+				this.left = null;
+				this.parent = null;
+				
+				left.calculateHeight();
+			}
+			else
+			{
+				if (this.parent.left != null && this.compareTo(this.parent.left) == 0) 
+				{
+					this.parent.left = null;
+				} 
+				else if (this.parent.right != null && this.compareTo(this.parent.right) == 0) 
+				{
+					this.parent.right = null;
+				}
+				this.parent.calculateHeight();
+				this.parent = null;
+			}
+		}
+		else if(comp.compare(this.data, item) > 0)
+		{
+			if(this.left != null)
+			{
+				this.left.removeNode(item);
+			}
+		}
+		else
+		{
+			if(this.right != null)
+			{
+				this.right.removeNode(item);
+			}
+		}
+	}
+	
+	/**
 	 * Elimina el elemento de la raíz del árbol.
 	 * @param item el elemento a ser eliminado.
 	 * @return la nueva raíz del árbol.
@@ -520,6 +725,83 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 			}
 		}
 		else if (this.data.compareTo(item) > 0)
+		{
+			this.left.removeNode(item);
+		}
+		else
+		{
+			this.right.removeNode(item);
+		}
+		
+		return node;
+			
+	}
+	
+	/**
+	 * Elimina el elemento de la raíz del árbol, de acuerdo al comparador con el cual los elementos se encuentran
+	 * ordenados.
+	 * @param item el elemento a ser eliminado.
+	 * @param comp el comparador que describe el orden de los elementos en el árbol. comp != null
+	 * @return la nueva raíz del árbol.
+	 */
+	public AVLNode<T> remove(T item, Comparator<T> comp)
+	{
+		AVLNode<T> node = this;
+		if(comp.compare(this.data, item) == 0)
+		{
+			if(balanceFactor == 1)
+			{
+				return null;
+			}
+			
+			if(this.left != null && this.right != null)
+			{
+				AVLNode<T> left = this.left;
+				AVLNode<T> right = this.right;
+				AVLNode<T> replacement = left;
+
+				int search = 0;
+				while(replacement.right != null)
+				{
+					replacement = replacement.right;
+					search++;
+				}
+				System.out.println(replacement);
+				
+				right.parent = replacement;
+				if(search > 0)
+				{
+					replacement.parent.right = null;
+				}
+				replacement.parent = this.parent;
+				if(search > 0)
+				{
+					replacement.left = left;
+				}
+				replacement.right = right;
+				left.parent = replacement;
+				right.parent = replacement;
+				replacement.calculateHeight();
+				return replacement;
+			}
+			else if(this.right != null && this.left == null)
+			{
+				AVLNode<T> right = this.right;
+				right.parent = this.parent;
+				this.right = null;
+				right.calculateHeight();
+				return right; 
+			}
+			else if(this.left != null && this.right == null)
+			{
+				AVLNode<T> left = this.left;
+				left.parent = this.parent;
+				this.left = null;
+				left.calculateHeight();
+				return left; 
+			}
+		}
+		else if (comp.compare(this.data, item) > 0)
 		{
 			this.left.removeNode(item);
 		}
@@ -702,6 +984,18 @@ public class AVLNode <T extends Comparable<T>> implements Comparable<AVLNode<T>>
 	public int compareTo(AVLNode<T> o) 
 	{
 		return o.data.compareTo(this.data);
+	}
+
+	@Override
+	public String toXML() 
+	{
+		return null;
+	}
+
+	@Override
+	public void readXML() 
+	{
+		// 
 	}
 	
 	

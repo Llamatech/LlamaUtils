@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="LlamaUtils" default="all" basedir=".">
+	<property name="version" value="master" />
+	<property name="suffix" value="-${version}" />
+	<property name="dir.src" value="src" />
+	<property name="dir.bin" value="bin" />
+	<property name="dir.dist" value="dist" />
+	<property name="dir.data" value="data" />
+	<property name="dir.docs" value="docs" />
+	<property name="pkg.base" value="com/llama/tech/utils" />
+	<property name="manifest.base" value="${dir.src}/META-INF/manifest.mf" />
+	<property name="jar.base" value="${dir.dist}/llamautils${suffix}.jar" />
+	<target name="clean">
+		<delete dir="${dir.bin}" />
+		<delete dir="${dir.dist}" />
+	</target>
+	<target name="prepare">
+		<mkdir dir="${dir.bin}" />
+		<mkdir dir="${dir.dist}" />
+	</target>
+	<target name="compile" depends="prepare">
+		<javac srcdir="${dir.src}" destdir="${dir.bin}" />
+	</target>
+	<target name="main-jar" depends="compile">
+		<jar jarfile="${jar.base}" manifest="${manifest.base}" basedir="${dir.bin}" />
+	</target>
+	<target name="javadoc">
+		<javadoc encoding="UTF-8" charset="UTF-8" docencoding="UTF-8"
+			sourcepath="${dir.src}" destdir="${dir.docs}/javadoc" />
+	</target>
+	<target name="all" depends="main-jar, javadoc" />
+
+	<target name="test" depends="compile">
+		<junit>
+			<classpath>
+				<pathelement location="bin" />
+				<pathelement location="lib/junit-4.12.jar" />
+			</classpath>
+			<batchtest>
+				<fileset dir="${dir.bin}">
+					<include name="**/*Test*" />
+				</fileset>
+			</batchtest>
+			<formatter type="brief" usefile="true" />
+		</junit>
+	</target>
+</project>

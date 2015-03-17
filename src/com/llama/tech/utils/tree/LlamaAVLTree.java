@@ -20,13 +20,15 @@
 
 package com.llama.tech.utils.tree;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.llama.tech.misc.XMLFormat;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
+public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements Tree<T>
 {
 	private AVLNode<T> root;
 	private int size;
@@ -80,6 +82,17 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 	}
 	
 	@Override
+	public boolean add(T item, Comparator<T> comp) 
+	{
+		if(!contains(item, comp))
+		{
+			root.add(item, comp);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public T remove(T item) 
 	{
 		if(size >= 1)
@@ -95,6 +108,17 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		return null;
 		
 	}
+	
+	@Override
+	public T remove(T item, Comparator<T> comp) 
+	{
+		if(contains(item, comp))
+		{
+			root = root.remove(item, comp);
+			return item;
+		}
+		return null;
+	}
 
 	@Override
 	public boolean contains(T item) 
@@ -102,6 +126,16 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		if(root != null)
 		{
 			return root.contains(item);
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean contains(T item, Comparator<T> comp) 
+	{
+		if(root != null)
+		{
+			return root.contains(item, comp);
 		}
 		return false;
 	}
@@ -161,6 +195,16 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		}
 		return null;
 	}
+	
+	@Override
+	public T get(T item, Comparator<T> comp) 
+	{
+		if(contains(item, comp))
+		{
+			return root.get(item, comp);
+		}
+		return null;
+	}
 
 	@Override
 	public boolean isEmpty() 
@@ -189,6 +233,7 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 
 
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	@Override
 	public T[] toArray() 
 	{
@@ -212,6 +257,8 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		
 		return contains;
 	}
+	
+	
 
 	@Override
 	public boolean removeAll(T[] c) 
@@ -331,4 +378,18 @@ public class LlamaAVLTree <T extends Comparable<T>> implements Tree<T>
 		}
 		
 	}
+
+	@Override
+	public String toXML() 
+	{
+		
+		return null;
+	}
+
+	@Override
+	public void readXML() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
