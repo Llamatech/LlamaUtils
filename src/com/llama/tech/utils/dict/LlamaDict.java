@@ -22,6 +22,7 @@
 package com.llama.tech.utils.dict;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.ListaDoblementeEnlazada;
@@ -64,8 +65,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 		 }
 	
 		 
-		 int pos = key.hashCode() % mainAreaSize;
-		 
+		 int pos = Math.floorMod(key.hashCode(), mainAreaSize);
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 if(entry == null)
 		 {
@@ -89,7 +89,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
 		 
 		 
-		 int pos = key.hashCode() % mainAreaSize;
+		 int pos = Math.floorMod(key.hashCode(), mainAreaSize);
 		 DictEntry<K, V> entry = mainArea.get(pos);
 		 
 		 return entry.setValue(key, value);
@@ -105,7 +105,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 		 }
 		 
 		 V rem = null;
-		 int pos = key.hashCode() % mainAreaSize;
+		 int pos = Math.floorMod(key.hashCode(), mainAreaSize);
 		 DictEntry<K,V> primero = mainArea.get(pos);
 
 		 if(primero != null && primero.getMyValue() != null)
@@ -199,7 +199,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 	 @Override
 	 public V getValue(K key)
 	 {
-		 int pos = key.hashCode() % mainAreaSize;
+		 int pos = Math.floorMod(key.hashCode(), mainAreaSize);
 		 if(pos < 0)
 		 {
 			 return null;
@@ -237,7 +237,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 	            {
 	                 K key = keys.next();
 	                 V value = values.next();
-	                 int pos = key.hashCode() % delta;
+	                 int pos = Math.floorMod(key.hashCode(), delta); //int pos = key.hashCode() % delta;
 	                 DictEntry<K, V> entry = mainAreaTemp.get(pos);
 	                 entry.addEntry(key, value);
 	            }
@@ -273,6 +273,13 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public Iterator<K> iterator() 
+	{
+		return getKeys();
+	}
+
 	 
 	
 }

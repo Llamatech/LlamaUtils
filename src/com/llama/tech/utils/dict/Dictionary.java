@@ -25,7 +25,7 @@ import java.io.Serializable;
 import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> extends Serializable
+public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> extends Serializable, Iterable<K>
 {
 	/**
 	 * Retorna el valor que corresponde a la llave dada por parámetro. 
