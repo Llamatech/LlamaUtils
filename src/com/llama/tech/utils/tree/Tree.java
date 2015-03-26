@@ -21,11 +21,12 @@
 package com.llama.tech.utils.tree;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.llama.tech.utils.list.Lista;
 
-public interface Tree<T extends Comparable<T>> extends Iterable<T>
+public interface Tree<T extends Comparable<T>> extends Iterable<T>, Serializable
 {
 	/**
 	 * Agrega un elemento al árbol. Si el elemento se encuentra en el árbol, no será agregado.

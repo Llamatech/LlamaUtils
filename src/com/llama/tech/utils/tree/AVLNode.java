@@ -20,11 +20,12 @@
 
 package com.llama.tech.utils.tree;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.llama.tech.misc.XMLFormat;
 
-public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comparable<AVLNode<T>> 
+public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comparable<AVLNode<T>>,Serializable 
 {
 	private T data;
 	private AVLNode<T> parent;

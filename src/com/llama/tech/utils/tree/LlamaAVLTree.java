@@ -20,6 +20,7 @@
 
 package com.llama.tech.utils.tree;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -28,7 +29,7 @@ import com.llama.tech.misc.XMLFormat;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements Tree<T>
+public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements Tree<T>, Serializable
 {
 	public static final int PREORDEN =1;
 	public static final int POSORDEN =2;
@@ -447,7 +448,6 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 	@Override
 	public String toXML() 
 	{
-
 		return null;
 	}
 
