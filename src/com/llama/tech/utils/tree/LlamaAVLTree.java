@@ -394,7 +394,11 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 			if(tree.getHeight()==1)
 			{
 				next = null;
-				return false;
+                if(item != null)
+                {
+                	return true;
+                }
+                return false;
 			}
 			try
 			{
