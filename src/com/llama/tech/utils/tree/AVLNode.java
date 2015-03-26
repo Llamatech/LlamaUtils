@@ -377,6 +377,170 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 		root.leftRotation();
 	}
 	
+	
+	/**
+	 * Método que balancea un subárbol, en caso de que este se encuentre desbalanceado.
+	 * @return true, si el árbol fue balanceado. false, de lo contrario.
+	 */
+	private boolean balanceTree(Comparator<T> comp)
+	{
+		if(this.left != null && this.right == null)
+		{
+			AVLNode<T> leftNode = this.left;
+			if(leftNode.getBalanceFactor() >= 2)
+			{
+				int leftLoad = (leftNode.left == null) ? 0 : leftNode.left.getBalanceFactor();
+				int rightLoad = (leftNode.right == null) ? 0 : leftNode.right.getBalanceFactor();
+				if(leftLoad > rightLoad)
+				{
+					rightRotation(comp);
+				}
+				else
+				{
+					hybridRightRotation(comp);
+				}
+				
+				return true;
+			}
+			
+		}
+		else if(this.right != null && this.left == null)
+		{
+			AVLNode<T> rightNode = this.right;
+			if(right.getBalanceFactor() >= 2)
+			{
+				int leftLoad = (rightNode.left == null) ? 0 : rightNode.left.getBalanceFactor();
+				int rightLoad = (rightNode.right == null) ? 0 : rightNode.right.getBalanceFactor();
+				
+				if(rightLoad > leftLoad)
+				{
+					leftRotation(comp);
+				}
+				else
+				{
+					hybridLeftRotation(comp);
+				}
+				
+				return true;
+			}
+		}
+		else if(this.right != null && this.left != null)
+		{
+			if(this.right.getBalanceFactor() >= this.left.getBalanceFactor()+2)
+			{
+				AVLNode<T> rightNode = this.right;
+				if(rightNode.left.getBalanceFactor() > rightNode.right.getBalanceFactor())
+				{
+					hybridLeftRotation(comp);
+				}
+				else
+				{
+				    leftRotation(comp);
+				}
+				return true;
+			}
+			else if(left.getBalanceFactor() >= right.getBalanceFactor()+2)
+			{
+				AVLNode<T> leftNode = this.left;
+				if(leftNode.left.getBalanceFactor() > leftNode.right.getBalanceFactor())
+				{
+					rightRotation(comp);
+				}
+				else
+				{
+					hybridRightRotation(comp);
+				}
+				return true;
+			}
+		}
+		return false;
+		
+	}
+
+	/**
+	 * Ejecuta una rotación a la derecha.
+	 * @return la nueva raíz tras la rotación.
+	 */
+	private AVLNode<T> rightRotation(Comparator<T> comp) 
+	{
+		AVLNode<T> left = this.left;
+		left.parent = this.parent;
+		if(this.parent != null)
+		{
+			if(this.parent.left != null && comp.compare(this.data,this.parent.left.data) == 0)
+			{
+				this.parent.left = left;
+			}
+			else if(this.parent.right != null && comp.compare(this.data, this.parent.right.data) == 0)
+			{
+				this.parent.right = left;
+			}
+			//left.parent.left = left;
+		}
+		this.left = left.right;
+		if(this.left != null)
+		{
+			this.left.parent = this;
+		}
+		left.right = this;
+		this.parent = left;
+		//left.calculateHeight();
+		return left;
+	}
+	
+	/**
+	 * Ejecuta una rotación a la izquierda.
+	 * @return la nueva raíz tras la rotación.
+	 */
+	private AVLNode<T> leftRotation(Comparator<T> comp)
+	{
+		AVLNode<T> right = this.right;
+		right.parent = this.parent;
+		if(right.parent != null)
+		{
+			if(right.parent.left != null && comp.compare(this.data,right.parent.left.data) == 0)
+			{
+				right.parent.left = right;
+			}
+			else if(right.parent.right != null && comp.compare(this.data,right.parent.right.data) == 0)
+			{
+				right.parent.right = right;
+			}
+		}
+		this.right = right.left;
+		if(this.right != null)
+		{
+			this.right.parent = this;
+		}
+		right.left = this;
+		this.parent = right;
+		return right;
+	}
+	
+	/**
+	 * Realiza una rotación mixta, en caso que el árbol se encuentre desbalanceado debido 
+	 * a el subárbol izquierdo del hijo derecho del nodo actual.
+	 */
+	private void hybridLeftRotation(Comparator<T> comp)
+	{
+		AVLNode<T> root = leftRotation(comp);
+		AVLNode<T> leftR = root.left.leftRotation(comp);
+		root.left = leftR;
+		root.rightRotation(comp);
+	}
+	
+	/**
+	 * Realiza una rotación mixta, en caso que el árbol se encuentre desbalanceado debido 
+	 * a el subárbol derecho del hijo izquierdo del nodo actual.
+	 */
+	private void hybridRightRotation(Comparator<T> comp)
+	{
+		AVLNode<T> root = rightRotation(comp);
+		AVLNode<T> rightR = root.right.rightRotation(comp);
+		root.right = rightR;
+		root.leftRotation(comp);
+	}
+	
 
 	/**
 	 * Describe si el nodo actual corresponde a la raíz de un árbol.
@@ -450,7 +614,7 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 			}
 		}
 
-		this.calculateHeight();
+		this.calculateHeight(comp);
 		
 	}
 	
@@ -781,7 +945,7 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 				replacement.right = right;
 				left.parent = replacement;
 				right.parent = replacement;
-				replacement.calculateHeight();
+				replacement.calculateHeight(comp);
 				return replacement;
 			}
 			else if(this.right != null && this.left == null)
@@ -789,7 +953,7 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 				AVLNode<T> right = this.right;
 				right.parent = this.parent;
 				this.right = null;
-				right.calculateHeight();
+				right.calculateHeight(comp);
 				return right; 
 			}
 			else if(this.left != null && this.right == null)
@@ -797,7 +961,7 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 				AVLNode<T> left = this.left;
 				left.parent = this.parent;
 				this.left = null;
-				left.calculateHeight();
+				left.calculateHeight(comp);
 				return left; 
 			}
 		}
@@ -834,7 +998,7 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 	}
 	
 	/**
-	 * Realiza el recorrido en preorden del árbol, no requiere de una lista auxiliar.
+	 * Realiza el recorrido en inorden del árbol, no requiere de una lista auxiliar.
 	 * @return el nodo visitado actualmente.
 	 */
 	public AVLNode<T> markVisited()
@@ -892,6 +1056,181 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 	}
 	
 	/**
+	 * Realiza el recorrido en posorden del árbol, no requiere de una lista auxiliar.
+	 * @return el nodo visitado actualmente.
+	 */
+	public AVLNode<T> markVisitedPos()
+	{
+		if(this.left == null && this.right == null)
+		{
+			visited[0] = true;
+			visited[1] = true;
+			visited[2] = true;
+			return this;
+		}
+		
+		if(!visited[0])
+		{
+			if(left != null && !left.partialPathCompletion())
+			{
+				return left.markVisitedPos();
+			}
+			else
+			{
+				visited[0] = true;
+				visited[1] = true;
+				if(left != null)
+				{
+					left.resetVisits();
+				}
+				
+			}
+		}
+		else if(!visited[2])
+		{
+			
+			if(right != null && !right.partialPathCompletion())
+			{
+				return right.markVisitedPos();
+			}
+			else
+			{
+				visited[2] = true;
+				if(right != null)
+				{
+					right.resetVisits();
+				}
+				return this;
+			}
+		}
+		else
+		{
+			resetVisits();
+		}
+		if(parent != null)
+		{
+			return parent.markVisitedPos();
+		}
+		return null;
+	}
+	
+	/**
+	 * Realiza el recorrido en preorden del árbol, no requiere de una lista auxiliar.
+	 * @return el nodo visitado actualmente.
+	 */
+	public AVLNode<T> markVisitedPre()
+	{
+		if(this.left == null && this.right == null)
+		{
+			visited[0] = true;
+			visited[1] = true;
+			visited[2] = true;
+			return this;
+		}
+		
+		if(!visited[1])
+		{
+			return this;
+			
+		}
+		else if(visited[1] && !visited[0])
+		{
+			if(left != null && !left.partialPathCompletion())
+			{
+				return left.markVisitedPre();
+			}
+			else
+			{
+				visited[0] = true;
+			}
+		}
+		else if(!visited[2])
+		{
+			
+			if(right != null && !right.partialPathCompletion())
+			{
+				return right.markVisitedPos();
+			}
+			else
+			{
+				visited[2] = true;
+				if(right != null)
+				{
+					right.resetVisits();
+				}
+				
+			}
+		}
+		else
+		{
+			resetVisits();
+		}
+		if(parent != null)
+		{
+			return parent.markVisitedPos();
+		}
+		return null;
+	}
+	
+	/**
+	 * Realiza el recorrido en orden inverso del árbol, no requiere de una lista auxiliar.
+	 * @return el nodo visitado actualmente.
+	 */
+	public AVLNode<T> markVisitedInv()
+	{
+		if(this.left == null && this.right == null)
+		{
+			visited[0] = true;
+			visited[1] = true;
+			visited[2] = true;
+			return this;
+		}
+		
+		if(!visited[0])
+		{
+			if(right != null && !right.partialPathCompletion())
+			{
+				return right.markVisitedInv();
+			}
+			else
+			{
+				visited[0] = true;
+				visited[1] = true;
+				if(right != null)
+				{
+					right.resetVisits();
+				}
+				return this;
+			}
+		}
+		else if(!visited[2])
+		{
+			
+			if(left != null && !left.partialPathCompletion())
+			{
+				return left.markVisitedInv();
+			}
+			else
+			{
+				visited[2] = true;
+				if(left != null)
+				{
+					left.resetVisits();
+				}
+			}
+		}
+		else
+		{
+			resetVisits();
+		}
+		if(parent != null)
+		{
+			return parent.markVisitedInv();
+		}
+		return null;
+	}
+	
+	/**
 	 * Calcula la altura del subárbol. Además establece si el subárbol debe ser balanceado.
 	 * @return la altura del subárbol.
 	 */
@@ -922,6 +1261,47 @@ public class AVLNode <T extends Comparable<T>> extends XMLFormat implements Comp
 			{
 				balanceTree();
 				return this.parent.calculateHeight();
+			}
+		}
+		else
+		{
+			this.balanceFactor = 1;
+		}
+		
+		return this.balanceFactor;
+	}
+	
+	/**
+	 * Calcula la altura del subárbol. Además establece si el subárbol debe ser balanceado.
+	 * @return la altura del subárbol.
+	 */
+	private int calculateHeight(Comparator<T> comp)
+	{
+		if(this.left != null && this.right == null)
+		{
+			this.balanceFactor = 1+left.calculateHeight(comp);
+			if(!this.balanced())
+			{
+				balanceTree(comp);
+				return this.parent.calculateHeight(comp);
+			}
+		}
+		else if(this.left == null && this.right != null)
+		{
+			this.balanceFactor = 1+right.calculateHeight(comp);
+			if(!this.balanced())
+			{
+				balanceTree(comp);
+				return this.parent.calculateHeight(comp);
+			}
+		}
+		else if(this.left != null && this.right != null)
+		{
+			this.balanceFactor = 1+Math.max(left.calculateHeight(comp), right.calculateHeight(comp));
+			if(!this.balanced())
+			{
+				balanceTree(comp);
+				return this.parent.calculateHeight(comp);
 			}
 		}
 		else

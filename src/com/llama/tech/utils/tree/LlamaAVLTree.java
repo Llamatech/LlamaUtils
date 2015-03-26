@@ -30,15 +30,35 @@ import com.llama.tech.utils.list.LlamaIterator;
 
 public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements Tree<T>
 {
+	public static final int PREORDEN =1;
+	public static final int POSORDEN =2;
+	public static final int INORDEN =3;
+	public static final int INVERSO =4;
 	private AVLNode<T> root;
 	private int size;
-	
+
 	@Override
 	public Iterator<T> iterator() 
 	{
-		return new LlamaTreeIterator<T>(root);
+		return new LlamaTreeIterator<T>(root,INORDEN,this);
 	}
-	
+
+	public Iterator<T> iteratorInverso()
+	{
+		return new LlamaTreeIterator<T>(root, INVERSO,this);
+	}
+
+	public Iterator<T> iteratorPreOrden()
+	{
+		return new LlamaTreeIterator<T>(root, PREORDEN,this);
+	}
+
+	public Iterator<T> iteratorPosOrden()
+	{
+		return new LlamaTreeIterator<T>(root, POSORDEN,this);
+	}
+
+
 	@Override
 	public int getHeight()
 	{
@@ -48,7 +68,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		}
 		return root.getBalanceFactor();
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -80,18 +100,33 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean add(T item, Comparator<T> comp) 
 	{
-		if(!contains(item, comp))
+		if(root != null)
 		{
-			root.add(item, comp);
+			//			if(!contains(item, comp))
+			{
+				root.add(item, comp);
+				if(!root.isRoot())
+				{
+					root = root.getParent();
+				}
+				size++;
+				return true;
+			}
+
+			//			return false;
+		}
+		else
+		{
+			root = new AVLNode<T>(item);
+			size++;
 			return true;
 		}
-		return false;
 	}
-	
+
 	@Override
 	public T remove(T item) 
 	{
@@ -104,18 +139,21 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 				return item;
 			}
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	@Override
 	public T remove(T item, Comparator<T> comp) 
 	{
-		if(contains(item, comp))
+		if(size >= 1)
 		{
-			root = root.remove(item, comp);
-			return item;
+			if(contains(item, comp))
+			{
+				root = root.remove(item, comp);
+				return item;
+			}
 		}
 		return null;
 	}
@@ -129,7 +167,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean contains(T item, Comparator<T> comp) 
 	{
@@ -162,7 +200,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 			}
 		}
 	}
-	
+
 	@Override
 	public void copyArray(T[] list) 
 	{
@@ -195,7 +233,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		}
 		return null;
 	}
-	
+
 	@Override
 	public T get(T item, Comparator<T> comp) 
 	{
@@ -224,7 +262,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 			i++;
 		}
 	}
-	
+
 	@Override
 	public int size() 
 	{
@@ -254,11 +292,11 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 				break;
 			}
 		}
-		
+
 		return contains;
 	}
-	
-	
+
+
 
 	@Override
 	public boolean removeAll(T[] c) 
@@ -274,7 +312,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		}
 		return deletion;
 	}
-	
+
 	@Override
 	public boolean removeAll(Lista<T> c) 
 	{
@@ -297,7 +335,7 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		root = null;
 		size = 0;
 	}
-	
+
 	@Override
 	public boolean isBalanced() 
 	{
@@ -305,46 +343,71 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		{
 			return root.balanced();
 		}
-		
+
 		return true;
 	}
-	
+
 	public void toConsole()
 	{
 		root.toConsole(root);
 	}
-	
-	
-	
+
+
+
 	private static class LlamaTreeIterator<T extends Comparable<T>> implements LlamaIterator<T>
 	{
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		private T item;
 		private T next;
 		private AVLNode<T> root;
+		private int tipo;
+		private LlamaAVLTree<T> tree;
 
-		public LlamaTreeIterator(AVLNode<T> root)
+		public LlamaTreeIterator(AVLNode<T> root, int ptipo, LlamaAVLTree<T> tree)
 		{
+			this.tree=tree;
+			tipo=ptipo;
 			this.root = root;
 			if(root != null)
 			{
-				AVLNode<T> node = root.markVisited();
+				AVLNode<T> node=null;
+				if(tipo==INORDEN)
+					node= root.markVisited();
+				else if(tipo==INVERSO)
+					node= root.markVisitedInv();
+				else if(tipo==PREORDEN)
+					node= root.markVisitedPre();
+				else if(tipo==POSORDEN)
+					node= root.markVisitedPos();
 				item = node.getValue();
 			}
 		}
-		
+
 		@Override
 		public boolean hasNext() 
 		{
+			if(tree.getHeight()==1)
+			{
+				next = null;
+				return false;
+			}
 			try
 			{
-				AVLNode<T> node = root.markVisited();
+				AVLNode<T> node=null;
+				if(tipo==INORDEN)
+					node= root.markVisited();
+				else if(tipo==INVERSO)
+					node= root.markVisitedInv();
+				else if(tipo==PREORDEN)
+					node= root.markVisitedPre();
+				else if(tipo==POSORDEN)
+					node= root.markVisitedPos();
 				next = node.getValue();
-				
+
 			}
 			catch(Exception e)
 			{
@@ -376,20 +439,22 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 		{
 			return null;
 		}
-		
+
 	}
+
+
 
 	@Override
 	public String toXML() 
 	{
-		
+
 		return null;
 	}
 
 	@Override
 	public void readXML() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }
