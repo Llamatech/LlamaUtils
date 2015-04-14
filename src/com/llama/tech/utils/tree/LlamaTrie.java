@@ -2,6 +2,9 @@ package com.llama.tech.utils.tree;
 
 import java.util.Iterator;
 
+import com.llama.tech.utils.list.Lista;
+import com.llama.tech.utils.list.LlamaArrayList;
+
 public class LlamaTrie<T> 
 {	
 	public TrieNode<T> root;
@@ -24,7 +27,12 @@ public class LlamaTrie<T>
 	@Override
 	public String toString()
 	{
-		return root.wordTree();
+		String repr = root.wordTree();
+		if(repr.length() > 1)
+		{
+		    repr = repr.substring(0, repr.length()-2);
+		}
+		return repr;
 
 	}
 
@@ -35,7 +43,8 @@ public class LlamaTrie<T>
 		trie.agregar("Torre", "Torre");		
 		trie.agregar("Toma", "Toma");
 		trie.agregar("Torreón", "Torreón");
-		trie.agregar("Tomate", "Tomate");
+		trie.agregar("Tomate", "A");
+		trie.agregar("Tomate", "B");
 		trie.agregar("Tomar", "Tomar");
 		trie.agregar("Torrijos", "Torrijos");
 		trie.agregar("Tornado", "Tornado");
@@ -44,21 +53,54 @@ public class LlamaTrie<T>
 		trie.agregar("Torno", "Torno");
 		trie.agregar("Tornar", "Tornar");
 		trie.agregar("Tornasol", "Tornasol");
-		trie.agregar("Antes", "Antes");	
+		trie.agregar("Antes", "Antes");
 
-
-		Iterator<String> it = trie.buscar("Tomar");
+		Iterator<String> it = trie.buscar("Tomate");
+		while(it.hasNext())
+		{
+			System.out.println(it.next());
+		}
+		
 		
 		System.out.println(trie);	
-		System.out.println('A' < 'T');
+
+		trie.eliminar("Toma");
+		
+		System.out.println(trie);	
 
 
+	}
 
+	public boolean eliminar(String word) 
+	{
+		return root.eliminar(word);
+	}
+
+	public boolean buscarB(String word)
+	{
+		return root.buscarB(word, 0);
+	}
+	
+	public boolean buscarPrefijoB(String word)
+	{
+		return root.buscarPrefijoB(word, 0);
 	}
 
 	public Iterator<T> buscar(String word)
 	{
 		return root.buscar(word	, 0);
+	}
+	
+	public Iterator<T> buscarPrefijo(String p)
+	{
+		Lista<T> lista = new LlamaArrayList<T>(50);
+		root.buscarPrefijo(p, lista, 0, false);
+		return lista.iterator();
+	}   
+	
+	public boolean eliminarPrefijo(String p)
+	{
+		return root.eliminarPrefijo(p, 0);
 	}
 
 
