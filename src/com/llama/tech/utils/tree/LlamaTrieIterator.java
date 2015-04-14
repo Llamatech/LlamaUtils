@@ -2,16 +2,19 @@ package com.llama.tech.utils.tree;
 
 import java.util.Iterator;
 
+import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
 public class LlamaTrieIterator<T> implements Iterator<T>{
 
-	private LlamaArrayList<T> elementos;
+	private Lista<T> elementos;
 
 	private int actual;
 
-	public  LlamaTrieIterator(LlamaArrayList<T> elem) {
-		elementos = elem;
+	public  LlamaTrieIterator(Lista<T> elem) {
+		elementos = new LlamaArrayList<T>(1);
+		for(T t: elem)
+			elementos.addAlFinal(t);
 		actual=0;
 	}
 

@@ -139,7 +139,8 @@ public class LlamaArrayList<T> implements Lista<T>, Serializable{
 	}
 
 	@Override
-	public synchronized int indexOf(T elemento) {
+	public synchronized int indexOf(T elemento) 
+	{
 		int pos =0;
 		for(T t:lista)
 		{

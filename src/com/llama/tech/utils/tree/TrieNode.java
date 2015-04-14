@@ -275,13 +275,13 @@ public class TrieNode<T>
 		if(node.isWord)
 		{
 			node.removeNode();
+			return true;
 		}
 		else
 		{
 			return false;
 		}
-		
-		return false;     
+		   
 	}
 	
 	private void removeNode() 
@@ -454,6 +454,10 @@ public class TrieNode<T>
 				{
 					return true;
 				}
+				else if(charNum==word.length()-1)
+				{
+					return false;
+				}
 				else if(child!=null)
 				{
 					return child.buscarB(word,charNum+1);
@@ -536,6 +540,10 @@ public class TrieNode<T>
 				{
 					return elements.iterator();
 				}
+				else if(word.length()-1==charNum)
+				{
+					return new LlamaTrieIterator<T>();
+				}
 				else if(child!=null)
 				{
 					return child.buscar(word,charNum+1);
@@ -577,12 +585,11 @@ public class TrieNode<T>
 		{
 			if(character==p.charAt(charNum))
 			{
-				//TODO: Esta al principio o al final el elemento actual?
 				for(T t: elements)
 					lista.addAlFinal(t);
 				if(p.length()-1==charNum)
 					b=true;
-				if(child !=null)
+				else if(child !=null)
 					child.buscarPrefijo(p, lista, charNum+1, b);
 			}
 			else
@@ -656,6 +663,10 @@ public class TrieNode<T>
 		return comp;
 	}
 	
+	public char getCharacter()
+	{
+		return character;
+	}
 
 
 

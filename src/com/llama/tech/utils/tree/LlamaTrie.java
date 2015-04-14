@@ -64,7 +64,7 @@ public class LlamaTrie<T>
 		
 		System.out.println(trie);	
 
-		trie.eliminar("Toma");
+		trie.eliminar("Tornar");
 		
 		System.out.println(trie);	
 
