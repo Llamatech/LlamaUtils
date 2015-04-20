@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
+import com.llama.tech.utils.tree.CopyOfLlamaTrie;
+import com.llama.tech.utils.tree.CopyOfTrieNode;
 import com.llama.tech.utils.tree.LlamaTrie;
 import com.llama.tech.utils.tree.TrieNode;
 
@@ -12,7 +14,8 @@ import junit.framework.TestCase;
 public class TrieTest extends TestCase{
 
 	private LlamaTrie<String> trie;
-	private Lista<String> lista;
+	private LlamaTrie<LlamaArrayList<String>> trie2;
+	private LlamaArrayList<String> lista;
 
 	public void setupEscenario1()
 	{
@@ -38,24 +41,35 @@ public class TrieTest extends TestCase{
 	{
 		lista = new LlamaArrayList<String>(10);
 
-		for (int i = 0; i < 10; i++) {
+		lista.addAlFinal("a");
 
-			lista.addAlFinal(""+i);
-		}
-
-		trie = new LlamaTrie<String>();
-		trie.agregar("Torre", lista.iterator());		
-		trie.agregar("Toma", lista.iterator(1));
-		trie.agregar("Torreón", lista.iterator(2));
-		trie.agregar("Tomate", "A");
-		trie.agregar("Tomate", "B");
-		trie.agregar("Tomar", lista.iterator(4));
-		trie.agregar("Torrijos", lista.iterator(5));
-		trie.agregar("Tornado", lista.iterator(6));
-		trie.agregar("Torno", lista.iterator(7));
-		trie.agregar("Tornar", "Tornar");
-		trie.agregar("Tornasol", "Tornasol");
-		trie.agregar("Antes", "Antes");
+		trie2 = new LlamaTrie<LlamaArrayList<String>>();
+		
+		trie2.agregar("Torre", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("b");
+		trie2.agregar("Toma", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("c");
+		trie2.agregar("Torreón", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("e1");
+		trie2.agregar("Tomate", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("e2");
+		trie2.agregar("Tomate", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("e");
+		trie2.agregar("Tomar", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("f");
+		trie2.agregar("Torrijos", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("g");
+		trie2.agregar("Tornados", lista);
+		lista= new LlamaArrayList<String>(10);
+		lista.addAlFinal("h");
+		trie2.agregar("Antes", lista);
 
 
 	}
@@ -73,30 +87,25 @@ public class TrieTest extends TestCase{
 		trie.agregar("Toma", "Toma");
 		trie.agregar("Tomate", "A");
 		trie.agregar("Antes", "Antes");
-		lista = new LlamaArrayList<String>(3);
-		lista.addAlFinal(1+"");
-		lista.addAlFinal(2+"");
-		lista.addAlFinal(3+"");
-		trie.agregar("Tomate", lista.iterator());
+
 
 		TrieNode<String> init =  trie.root.getChild();
 
-		assertEquals("No es el caracter esperado", 'T', init.getCharacter());
+		assertEquals("No es el caracter esperado", 'A', init.getCharacter());
+		assertEquals("No es el caracter esperado", 'n', init.getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'T', init.getSibling().getCharacter());
+		assertEquals("No es el caracter esperado", 't', init.getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'e', init.getChild().getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 's', init.getChild().getChild().getChild().getChild().getCharacter());
+		init = trie.root.getChild().getSibling();
 		assertEquals("No es el caracter esperado", 'o', init.getChild().getCharacter());
-		assertEquals("No es el caracter esperado", 'A', init.getSibling().getCharacter());
-		assertEquals("No es el caracter esperado", 'r', init.getChild().getChild());
-		assertEquals("No es el caracter esperado", "r", init.getChild().getChild().getChild());
-		assertEquals("No es el caracter esperado", "e", init.getChild().getChild().getChild().getChild());
-		assertEquals("No es el caracter esperado", "m", init.getChild().getChild().getSibling());
-		assertEquals("No es el caracter esperado", "a", init.getChild().getChild().getSibling().getChild());
-		assertEquals("No es el caracter esperado", "t", init.getChild().getChild().getSibling().getChild().getChild());
-		assertEquals("No es el caracter esperado", "e", init.getChild().getChild().getSibling().getChild().getChild().getChild());
-		assertEquals("No es el caracter esperado", "n", init.getSibling().getChild());
-		assertEquals("No es el caracter esperado", "t", init.getSibling().getChild().getChild());
-		assertEquals("No es el caracter esperado", "e", init.getSibling().getChild().getChild().getChild());
-		assertEquals("No es el caracter esperado", "s", init.getSibling().getChild().getChild().getChild().getChild());
-
-
+		assertEquals("No es el caracter esperado", 'm', init.getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'a', init.getChild().getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 't', init.getChild().getChild().getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'e', init.getChild().getChild().getChild().getChild().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'r', init.getChild().getChild().getSibling().getCharacter());
+		assertEquals("No es el caracter esperado", 'r', init.getChild().getChild().getSibling().getChild().getCharacter());
+		assertEquals("No es el caracter esperado", 'e', init.getChild().getChild().getSibling().getChild().getChild().getCharacter());
 
 
 
@@ -106,27 +115,22 @@ public class TrieTest extends TestCase{
 	{
 		setupEscenario1();
 
-		assertTrue("Deberia encontrar la palabra", trie.buscarB("Torno"));
-		assertFalse("No debería encontrar la palabra", trie.buscarB("Torn"));
-		assertFalse("No debería encontrar la palabra", trie.buscarB("Hola"));
+		assertEquals("Deberia encontrar la palabra", "Torno", trie.buscar("Torno"));
+		assertEquals("Deberia encontrar la palabra","B", trie.buscar("Tomate"));
+		assertNull("No debería encontrar la palabra", trie.buscar("Torn"));
+		assertNull("No debería encontrar la palabra", trie.buscar("Hola"));
 
 		setupEscenario2();
 
-		Iterator<String> it = trie.buscar("Torre");
-
-		int i =0;
-		while(it.hasNext())
-		{
-			assertTrue("Hubo un error recuperando el valor", it.next().equals(i+""));
-			i++;
-		}
-
-		it = trie.buscar("Tomate");
-		assertEquals("Hubo un error recuperando el valor", "A", it.next());
-		assertEquals("Hubo un error recuperando el valor", "B", it.next());
-
-		it = trie.buscar("Antes");
-		assertEquals("Hubo un error recuperando el valor", "Antes", it.next());
+		LlamaArrayList<String> it = trie2.buscar("Tomate");
+		assertEquals("El valor no corresponde", it.get(0),"e1");
+		assertEquals("El valor no corresponde", it.get(1),"e2");
+		
+		it = trie2.buscar("Toma");
+		assertEquals("El valor no corresponde", "b",it.get(0));
+		
+		assertNull("No debería retornar ningún valor porque la palabra no existe", trie2.buscar("holi"));
+		
 
 	}
 
@@ -134,28 +138,19 @@ public class TrieTest extends TestCase{
 	{
 		setupEscenario1();
 
-		assertTrue("Deberia encontrar el prefijo", trie.buscarPrefijoB("Torno"));
-		assertTrue("Debería encontrar el prefijo", trie.buscarPrefijoB("Torn"));
-		assertFalse("No debería encontrar el prefijo", trie.buscarPrefijoB("Hola"));
-
-		setupEscenario2();
-
-		Iterator<String> it = trie.buscarPrefijo("Torna");
-
-		assertEquals("Hubo un error recuperando el valor", "6", it.next());
-		assertEquals("Hubo un error recuperando el valor", "7", it.next());
-		assertEquals("Hubo un error recuperando el valor", "8", it.next());
-		assertEquals("Hubo un error recuperando el valor", "9", it.next());
-		assertEquals("Hubo un error recuperando el valor", "Tornar", it.next());
-		assertEquals("Hubo un error recuperando el valor", "Tornasol", it.next());
-
-		it = trie.buscarPrefijo("Holi");
-		assertFalse("No debería haber ningun elemento", it.hasNext());
-
+		Iterator<String> it = trie.buscarPalabrasConPrefijo("Tom");
+		
+		assertEquals("Hubo un error recuperando el valor", "Toma", it.next());
+		assertEquals("Hubo un error recuperando el valor", "Tomar", it.next());
+		assertEquals("Hubo un error recuperando el valor", "Tomate", it.next());
+		
+		it = trie.buscarPalabrasConPrefijo("holi");
+		assertFalse("No debería retornar ningún valor porque la palabra no existe", it.hasNext());
+		
 
 		setupEscenario3();
 
-		it = trie.buscarPrefijo("Torna");
+		it = trie.buscarPalabrasConPrefijo("Torna");
 		assertFalse("No debería haber ningun elemento", it.hasNext());
 
 
@@ -167,30 +162,45 @@ public class TrieTest extends TestCase{
 	{
 		setupEscenario1();
 
-		assertTrue("Debería eliminarse",trie.eliminar("Tornar"));
-		assertFalse("La palabra no se elimino correctamente",trie.buscarB("Tornar"));
-		assertTrue("El prefijo no debería haberse borrado", trie.buscarPrefijoB("Torna"));
-		assertFalse("No debería eliminarse",trie.eliminar("Holi"));
+		assertEquals("Debería eliminarse",trie.eliminar("Tornar"),"Tornar");
+		assertNull("La palabra no se elimino correctamente",trie.buscar("Tornar"));
+		assertNull("No debería poderse eliminar",trie.eliminar("Holi"));
+		
+		setupEscenario2();
+		
+		LlamaArrayList<String> it = trie2.eliminar("Tomate");
+		
+		assertEquals("No se eliminaron los valores correctos", "e1", it.get(0));
+		assertEquals("No se eliminaron los valores correctos", "e2", it.get(1));
 
 		setupEscenario3();
 
-		assertFalse("No debería borrarse", trie.eliminar("Tor"));
+		assertNull("No debería borrarse", trie.eliminar("Tor"));
 	}
 
 	public void testEliminarPrefijo()
 	{
 		setupEscenario1();
 
-		assertTrue("Debería borrar el prefijo", trie.eliminarPrefijo("Torna"));
-		assertFalse("La palabra no debería existir", trie.buscarB("Tornar"));
-		assertFalse("La palabra no debería existir", trie.buscarB("Tornado"));
-		assertFalse("La palabra no debería existir", trie.buscarB("Tornasol"));
-		assertTrue("La palabra debería existir", trie.buscarB("Torno"));
+		Iterator<String> it = trie.eliminarPalabrasConPrefijo("Tom");
+		
+		assertEquals("Hubo un error recuperando el valor", "Toma", it.next());
+		assertEquals("Hubo un error recuperando el valor", "Tomar", it.next());
+		assertEquals("Hubo un error recuperando el valor", "Tomate", it.next());
+		
+		assertNull("No debería encontrarse la palabra", trie.buscar("Toma"));
+		assertNull("No debería encontrarse la palabra", trie.buscar("Tomar"));
+		assertNull("No debería encontrarse la palabra", trie.buscar("Tomate"));
 
-		assertFalse("no debería borrar el prefijo", trie.eliminarPrefijo("Hola"));
+
+		
+		it = trie.eliminarPalabrasConPrefijo("holi");
+		assertFalse("No debería retornar ningún valor porque la palabra no existe", it.hasNext());
+		
 
 		setupEscenario3();
 
-		assertFalse("No debería borrarse", trie.eliminarPrefijo("Tor"));
+		it = trie.eliminarPalabrasConPrefijo("Torna");
+		assertFalse("No debería haber ningun elemento", it.hasNext());
 	}
 }

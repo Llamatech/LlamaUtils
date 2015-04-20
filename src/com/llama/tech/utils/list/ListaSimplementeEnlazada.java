@@ -504,6 +504,16 @@ public class ListaSimplementeEnlazada<ClaseGenerica extends Comparable<ClaseGene
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public synchronized void addAll(Lista<ClaseGenerica> l) 
+	{
+		for(ClaseGenerica elem: l)
+		{
+			addAlFinal(elem);
+		}
+		
+	}
 
 
 	

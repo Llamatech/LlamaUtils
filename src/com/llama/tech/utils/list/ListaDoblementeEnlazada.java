@@ -561,5 +561,15 @@ public class ListaDoblementeEnlazada<ClaseGenerica extends Comparable<ClaseGener
 		}
 		return "[]";
 	}
+	
+	@Override
+	public void addAll(Lista<ClaseGenerica> l) 
+	{
+		for(ClaseGenerica elem: l)
+		{
+			addAlFinal(elem);
+		}
+		
+	}
 }
  

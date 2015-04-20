@@ -21,6 +21,10 @@
 package com.llama.tech.utils.list;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class LlamaArrayList<T> implements Lista<T>, Serializable{
 
@@ -51,12 +55,18 @@ public class LlamaArrayList<T> implements Lista<T>, Serializable{
 	}
 
 	@Override
-	public synchronized boolean add(int pos, T elemento) throws IndexOutOfBoundsException {
+	public synchronized boolean add(int pos, T elemento) throws IndexOutOfBoundsException 
+	{
 		agrandar();
 		if(pos>posActual+1)
 			throw new IndexOutOfBoundsException();
-		for(int i=pos;i<posActual;i++){
-			lista[i+1]=lista[i];
+		
+		T lastElem = lista[pos];
+		for(int i=pos;i<posActual;i++)
+		{
+            T nextElem = lista[i+1];			 
+			lista[i+1]=lastElem;
+			lastElem = nextElem;
 		}
 		lista[pos]=elemento;
 		posActual++;
@@ -306,10 +316,48 @@ public class LlamaArrayList<T> implements Lista<T>, Serializable{
 	}
 
 	@Override
-	public LlamaIterator<T> reverseIterator() {
+	public Iterator<T> reverseIterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public synchronized void addAll(Lista<T> l) 
+	{
+		for(T elem: l)
+		{
+			addAlFinal(elem);
+		}
+		
+	}
+	
+	@Override
+	public String toString()
+	{
+		String info = "[";
+		for(T item: lista)
+		{
+			if(item != null)
+			{
+				info += item.toString()+", ";
+			}
+		}
+		
+		info += "]";
+		
+		return info;
+		
+	}
+	
+	public LlamaArrayList<T> clone()
+	{
+		LlamaArrayList<T> copy = new LlamaArrayList<T>(posActual);
+		copy.addAll(this);
+		return copy;
+	}
+
+	
+
 
 
 }

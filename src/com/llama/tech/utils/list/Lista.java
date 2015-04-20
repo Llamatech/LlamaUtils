@@ -22,6 +22,7 @@ package com.llama.tech.utils.list;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -64,6 +65,7 @@ public interface Lista<ClaseGenerica> extends Serializable, Iterable<ClaseGeneri
 	 * @param elemento El elemento a buscar
 	 * @return Un boolean indicando si el elemento est� en la lista o no
 	 */
+	
 	public boolean contains(ClaseGenerica elemento);
 	/**
 	 * Devuelve el objeto buscado si el objeto dado est� contenido en el arreglo
@@ -145,6 +147,7 @@ public interface Lista<ClaseGenerica> extends Serializable, Iterable<ClaseGeneri
 	 * @param elemento El objeto a eliminar
 	 * @return El objeto eliminado.
 	 */
+//	@Override
 	public ClaseGenerica remove(ClaseGenerica elemento);
 	/**
 	 * M�todo que reemplaza el elemento de una posici�n por otro.
@@ -159,4 +162,6 @@ public interface Lista<ClaseGenerica> extends Serializable, Iterable<ClaseGeneri
 	 * @return El tama�o de la lista (el n�mero de elementos que contiene)
 	 */
 	public int size();
+	
+	public void addAll(Lista<ClaseGenerica> l);
 }

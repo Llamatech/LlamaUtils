@@ -9,19 +9,21 @@ public class TrieNode<T>
 {
 	private char character;
 
-	private Lista<T> elements = new LlamaArrayList<T>(1);
+	private T element;
 
 	private boolean isWord = false;
-	
+
 	private boolean right = false;
 
 	private TrieNode<T> parent;
-	
+
 	private TrieNode<T> pSibling;
-	
+
 	private TrieNode<T> sibling;
 
 	private TrieNode<T> child;
+
+	private int size = 0;
 
 	public TrieNode()
 	{
@@ -37,134 +39,71 @@ public class TrieNode<T>
 	{
 		this.character = character;
 		isWord = true;
-		elements.addAlFinal(elem);
+		element = elem;
 	}
 
-	public TrieNode(char character, Iterator<T> elems)
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void agregar(String word, T elem)
 	{
-		this.character = character;
-		isWord = true;
-		while(elems.hasNext())
+		TrieNode<T> node = this;
+		int index = 0;
+		while(index < word.length())
 		{
-			elements.addAlPrincipio(elems.next());
+			TrieNode<T> childS = node.getSibling(word.charAt(index));
+			if(childS != null)
+			{
+				node = childS;
+				index++;
+			}
+			else
+			{
+				break;
+			}
 		}
-	}
-	
-	
-	public boolean agregar(String word, T elem)
-	{
-	      TrieNode<T> node = this;
-	      int index = 0;
-	      while(index < word.length())
-	      {
-	          TrieNode<T> childS = node.getSibling(word.charAt(index));
-	          if(childS != null)
-	          {
-	              node = childS;
-	              index++;
-	          }
-	          else
-	          {
-	              break;
-	          }
-	      }
-	      
 
-	      while(index < word.length())
-	      {
-	    	  
-	          node = node.appendNode(word.charAt(index));
-	          index++;
-	      }
 
-	      if(node.isWord)
-	      {
-	          int j = node.elements.indexOf(elem);
-	          if(j < 0)
-	          {
-	              node.elements.addAlFinal(elem);
-	          }
-	          else
-	          {
-	              node.elements.set(j, elem);
-	          }
-	      }
-	      else
-	      {
-	          node.elements.addAlFinal(elem);
-	          node.isWord = true;
-	      }
+		while(index < word.length())
+		{
+			node = node.appendNode(word.charAt(index));
+			index++;
+		}
 
-	      return true;
-	}
-	
-	
-	public boolean agregar(String word, Iterator<T> elems)
-	{
-	      TrieNode<T> node = this;
-	      int index = 0;
-	      while(index < word.length())
-	      {
-	          TrieNode<T> childS = node.getSibling(word.charAt(index));
-	          if(childS != null)
-	          {
-	              node = childS;
-	              index++;
-	          }
-	          else
-	          {
-	              break;
-	          }
-	      }
-	      
+		if(node.isWord)
+		{
+			if(node.element instanceof Lista)
+			{
+				((Lista) node.element).addAll((Lista) elem);
+			}
+			else
+			{
+				node.element = elem;
+				node.isWord = true;
+			}
 
-	      while(index < word.length())
-	      {
-	          node = node.appendNode(word.charAt(index));
-	          index++;
-	      }
+		}
+		else
+		{
+			node.element = elem;
+			node.isWord = true;
+			size++;
+		}
 
-	      if(node.isWord)
-	      {
-	    	  while(elems.hasNext())
-	    	  {
-	    		  T elem = elems.next();
-		          int j = node.elements.indexOf(elem);
-		          if(j < 0)
-		          {
-		              node.elements.addAlFinal(elem);
-		          }
-		          else
-		          {
-		              node.elements.set(j, elem);
-		          }
-	    	  }
-	      }
-	      else
-	      {
-	    	  while(elems.hasNext())
-	    	  {
-	    		  node.elements.addAlFinal(elems.next());
-	    	  }
-	          node.isWord = true;
-	      }
 
-	      return true;
 	}
 
 	private TrieNode<T> appendNode(char c)
 	{
-	      TrieNode<T> nNode = new TrieNode<T>(c);
-	      if(child == null)
-	      {
-	          child = nNode;
-	          child.parent = this;
-	          return child;
-	      }
-	      else
-	      {
+		TrieNode<T> nNode = new TrieNode<T>(c);
+		if(child == null)
+		{
+			child = nNode;
+			child.parent = this;
+			return child;
+		}
+		else
+		{
 			TrieNode<T> sib = getGreaterSibling(c);
-			
+
 			if(!sib.right)
 			{
 				if (sib.parent != null) 
@@ -172,86 +111,86 @@ public class TrieNode<T>
 					nNode.parent = sib.parent;
 					nNode.parent.child = nNode;
 					sib.parent = null;
-					
+
 				}
-				
+
 				nNode.pSibling = sib.pSibling;
 				if (nNode.pSibling != null) 
 				{
 					nNode.pSibling.sibling = nNode;
 				}
-		    	  nNode.sibling = sib;
-		    	  sib.pSibling = nNode;
-	        }
+				nNode.sibling = sib;
+				sib.pSibling = nNode;
+			}
 			else
 			{
 				sib.right = false;
 				nNode.pSibling = sib;
 				sib.sibling = nNode;
 			}
-	    	  return nNode;
-	      }
+			return nNode;
+		}
 	}
 
 	private TrieNode<T> getSibling(char c)
 	{     
-	      if(child == null)
-	      {
-	    	  return null;
-	      }
-	      
-	      else
-	      {
-	          TrieNode<T> sibling = this.child;
-	          while(sibling != null)
-	          {
-	               if(sibling.character == c)
-	               {
-	                    break;
-	               }
-	               else
-	               {
-	                    sibling = sibling.sibling;
-	               }
-	          }
+		if(child == null)
+		{
+			return null;
+		}
 
-	          return sibling;
+		else
+		{
+			TrieNode<T> sibling = this.child;
+			while(sibling != null)
+			{
+				if(sibling.character == c)
+				{
+					break;
+				}
+				else
+				{
+					sibling = sibling.sibling;
+				}
+			}
 
-	      }
+			return sibling;
+
+		}
 	}
 
 
 	private TrieNode<T> getGreaterSibling(char c)
 	{
-	          TrieNode<T> sibling = this.child;
-	          TrieNode<T> lastVSibling = this.child;
-	          while(sibling != null)
-	          {
-	               if(sibling.character > c)
-	               {
-	                    break;
-	               }
-	               else
-	               {
-	            	    lastVSibling = sibling;
-	                    sibling = sibling.sibling;
-	               }
-	          }
+		TrieNode<T> sibling = this.child;
+		TrieNode<T> lastVSibling = this.child;
+		while(sibling != null)
+		{
+			if(sibling.character > c)
+			{
+				break;
+			}
+			else
+			{
+				lastVSibling = sibling;
+				sibling = sibling.sibling;
+			}
+		}
 
-	          if(sibling == null)
-	          {
-	        	  if(lastVSibling.character < c)
-	        	  {
-	        		  lastVSibling.right = true;
-	        	  }
-	        	  return lastVSibling;
-	          }
-	       
-	          return sibling;
+		if(sibling == null)
+		{
+			if(lastVSibling.character < c)
+			{
+				lastVSibling.right = true;
+			}
+			return lastVSibling;
+		}
+
+		return sibling;
 
 	}
-	
-	public boolean eliminar(String word)
+
+	public T eliminar(String word)
 	{
 		TrieNode<T> node = this;
 		boolean found = true;
@@ -266,31 +205,33 @@ public class TrieNode<T>
 			}
 			i++;
 		}
-		
+
 		if(!found)
 		{
-			return found;
+			return null;
 		}
-		
+
 		if(node.isWord)
 		{
+			T data = node.element;
 			node.removeNode();
-			return true;
+			size--;
+			return data;
 		}
 		else
 		{
-			return false;
+			return null;
 		}
-		   
+
 	}
-	
+
 	private void removeNode() 
 	{
-		
+
 		if(child != null)
 		{
 			isWord = false;
-			elements.clear();
+			element=null;
 		}
 		else
 		{
@@ -336,191 +277,106 @@ public class TrieNode<T>
 					pSibling = null;
 				}
 			}
-			
+
 		}
-		
+
 	}
 
-	private boolean eliminar(String word, int index)
-	{
-		boolean[] marks = {false, false};
-		
-		if(character == word.charAt(index))
-		{
-			if(child != null)
-			{
-				marks[0] = child.eliminar(word, index+1);
-			}
-			else
-			{
-				if(index == word.length()-1)
-				{
-					isWord = false;
-					elements.clear();
-					return true;
-				}
-			}
-		}
-		else
-		{
-			if(sibling != null)
-			{
-				marks[1] = sibling.eliminar(word, index);
-			}
-		}
-		
-		if(marks[0])
-		{
-			if(!child.hasSiblings())
-			{
-				child = null;
-				if(sibling != null)
-				{
-					
-				}
-			}
-		}
-		
-		return false;
-	}
-
-	public boolean eliminarPrefijo(String word, int charNum)
+	public void eliminarPrefijo(Lista<String> lista, String wordWIP, String word, int charNum, boolean b)
 	{
 		if(character=='\0')
 		{
 			if (child!=null)
 			{
-				return child.eliminarPrefijo(word,charNum);
+				child.eliminarPrefijo(lista, wordWIP,word,charNum,b);
 			}
 			else
 			{
-				return word.equals("");
+
 			}
 		}
 		else
 		{
-			if(character==word.charAt(charNum))
+			if(b)
 			{
+				wordWIP+=character;
+				if(isWord)
+				{
+					lista.addAlFinal(wordWIP);
+				}
+
+				if (child!=null)
+				{
+					child.eliminarPrefijo(lista, wordWIP, word, charNum+1, b);
+				}
+				if(sibling!=null)
+				{
+					sibling.eliminarPrefijo(lista, wordWIP.substring(0,wordWIP.length()-1), word, charNum, b);
+				}
+
+				child=null;
+				sibling=null;
+			}
+			else if(character==word.charAt(charNum))
+			{
+				wordWIP+=character;
+
+
 				if(charNum==word.length()-1)
 				{
+					b=true;
+					if(isWord)
+					{
+						lista.addAlFinal(wordWIP);
+					}
+
+					if(child!=null)
+					{
+						child.eliminarPrefijo(lista, wordWIP, word, charNum, b);
+					}
+
 					if(parent!=null)
+					{
 						if(sibling!=null)
+						{
+							//sibling.eliminarPrefijo(lista, wordWIP.substring(0,wordWIP.length()-1), word, charNum, b);
 							parent.child=sibling;
+						}
 						else
+						{
 							parent.child=null;
+						}
+					}
 					else //if(pSibling!=null)
+					{
 						if(sibling!=null)
+						{
+							//sibling.eliminarPrefijo(lista, wordWIP.substring(0,wordWIP.length()-1), word, charNum, b);
 							pSibling.sibling=sibling;
+						}
 						else
+						{
 							pSibling.sibling=null;
-					return true;
+						}
+					}
+
 				}
 				else
 				{
 					if(child!=null)
-						return child.eliminarPrefijo(word, charNum+1);
-					else
-						return false;
+						child.eliminarPrefijo(lista, wordWIP, word, charNum+1, b);
 				}
 			}
 			else
 			{
 				if(sibling!=null)
-					return sibling.eliminarPrefijo(word, charNum);
-				else
-					return false;
+					sibling.eliminarPrefijo(lista, wordWIP, word, charNum, b);
 			}
 		}
 	}
 
-	public boolean buscarB(String word, int charNum)
+	public T buscar(String word, int charNum)
 	{
-		if(character=='\0')
-		{
-			if(child!=null)
-			{
-				return child.buscarB(word, charNum);
-			}
-			else
-			{
-				return word.equals("");
-			}
-		}
-		else
-		{
-			if(character == word.charAt(charNum))
-			{
-				if(isWord && charNum==word.length()-1)
-				{
-					return true;
-				}
-				else if(charNum==word.length()-1)
-				{
-					return false;
-				}
-				else if(child!=null)
-				{
-					return child.buscarB(word,charNum+1);
-				}
-				else
-				{
-					return false;
-				}
-
-			}
-			else
-			{
-				if(sibling!=null)
-					return sibling.buscarB(word,charNum);
-				else
-				{
-					return false;
-				}
-			}
-		}
-	}
-
-	public boolean buscarPrefijoB(String p, int charNum)
-	{
-		if(character=='\0')
-		{
-			if(child!=null)
-			{
-				return child.buscarPrefijoB(p, charNum);
-			}
-			else
-			{
-				return p.equals("");
-			}
-		}
-		else
-		{
-			if(character==p.charAt(charNum))
-			{
-
-				if(p.length()-1==charNum)
-					return true;
-				else if(child !=null)
-					return child.buscarPrefijoB(p, charNum+1);
-				else
-					return false;
-			}
-			else
-			{
-
-				if(sibling!=null)
-					return sibling.buscarPrefijoB(p, charNum);
-				else
-					return false;
-
-			}
-		}
-	}
-
-
-	public Iterator<T> buscar(String word, int charNum)
-	{
-
 		if(character=='\0')
 		{
 			if(child!=null)
@@ -529,7 +385,7 @@ public class TrieNode<T>
 			}
 			else
 			{
-				return elements.iterator();
+				return null;
 			}
 		}
 		else
@@ -538,11 +394,11 @@ public class TrieNode<T>
 			{
 				if(isWord && charNum==word.length()-1)
 				{
-					return elements.iterator();
+					return element;
 				}
-				else if(word.length()-1==charNum)
+				else if(charNum==word.length()-1)
 				{
-					return new LlamaTrieIterator<T>();
+					return null;
 				}
 				else if(child!=null)
 				{
@@ -550,64 +406,71 @@ public class TrieNode<T>
 				}
 				else
 				{
-					return new LlamaTrieIterator<T>();
+					return null;
 				}
 
 			}
 			else
 			{
-				if(sibling!=null)
-					return sibling.buscar(word,charNum);
+				if(character > word.charAt(charNum)||sibling==null)
+				{
+					return null;
+				}
 				else
 				{
-					return new LlamaTrieIterator<T>();
+					return sibling.buscar(word,charNum);
 				}
+
 			}
 		}
-
-
 	}
 
-	public void buscarPrefijo(String p, Lista<T> lista, int charNum, boolean b)
+
+	public void buscarPrefijo(String p, Lista<String> lista, int charNum, boolean b, String wordWIP)
 	{
 		if(character=='\0')
 		{
 			if(child!=null)
 			{
-				child.buscarPrefijo(p, lista, charNum,false);
+				child.buscarPrefijo(p, lista, charNum,false,wordWIP);
+			}
+
+		}
+		else
+		{
+			if(b)
+			{
+				wordWIP+=character;
+				if(isWord)
+				{
+					lista.addAlFinal(wordWIP);
+					b=true;
+				}
+				if(child!=null)
+				{
+					child.buscarPrefijo(p, lista, charNum+1, b, wordWIP);
+				}
+				if(sibling!=null)
+				{
+					sibling.buscarPrefijo(p, lista, charNum, b, wordWIP.substring(0, wordWIP.length()-1));
+				}
+
+			}
+			else if(character==p.charAt(charNum))
+			{
+				wordWIP+=character;
+				if(p.length()-1==charNum)
+				{
+					b=true;
+				}
+				if(child !=null)
+					child.buscarPrefijo(p, lista, charNum+1, b, wordWIP);
 			}
 			else
 			{
 
-			}
-		}
-		else
-		{
-			if(character==p.charAt(charNum))
-			{
-				for(T t: elements)
-					lista.addAlFinal(t);
-				if(p.length()-1==charNum)
-					b=true;
-				else if(child !=null)
-					child.buscarPrefijo(p, lista, charNum+1, b);
-			}
-			else
-			{
-				if(b)
-				{
-					for(T t: elements)
-						lista.addAlFinal(t);
-					if(child!=null)
-						child.buscarPrefijo(p, lista, charNum, b);
-					if(sibling!=null)
-						sibling.buscarPrefijo(p, lista, charNum, b);
-				}
-				else
-				{
-					if(sibling!=null)
-						sibling.buscarPrefijo(p, lista, charNum, b);
-				}
+				if(sibling!=null&&character<p.charAt(charNum))
+					sibling.buscarPrefijo(p, lista, charNum, b, wordWIP);
 			}
 		}
 	}
@@ -643,32 +506,142 @@ public class TrieNode<T>
 
 	private String getWords(String comp, String prefix) 
 	{
-        String sPrefix = character != '\0'? prefix+character : prefix;
-        
-        if(this.isWord)
+		String sPrefix = character != '\0'? prefix+character : prefix;
+
+		if(this.isWord)
 		{
 			comp += prefix+character+", ";
 		}
-		
+
 		if(child != null)
 		{
 			comp = child.getWords(comp, sPrefix);
 		}
-		
+
 		if(sibling != null)
 		{
 			comp = sibling.getWords(comp, prefix);
 		}
-		
+
 		return comp;
 	}
-	
+
 	public char getCharacter()
 	{
 		return character;
 	}
 
+	public int getSize()
+	{
+		return size;
+	}
+
+	public String buscarHijosPrefijo(String p, int charNum)
+	{
+		if(character=='\0')
+		{
+			if(child!=null)
+			{
+				return child.buscarHijosPrefijo(p, charNum);
+			}
+			else
+			{
+				return "";
+			}
+		}
+		else
+		{
+			if(character==p.charAt(charNum))
+			{
+
+				if(p.length()-1==charNum)
+					return getTodosMisHijos();
+				else if(child !=null)
+					return child.buscarHijosPrefijo(p, charNum+1);
+				else
+					return"";
+			}
+			else
+			{
+
+				if(sibling!=null)
+					return sibling.buscarHijosPrefijo(p, charNum);
+				else
+					return "";
+
+			}
+		}
+	}
+
+	public String getTodosMisHijos()
+	{
+		return child.getHermanos();
+	}
+
+	public String getHermanos()
+	{
+		if (sibling!=null)
+		{
+			return character+sibling.getHermanos();
+		}
+
+		else 
+		{
+			return character+"";
+		}
+	}
+
+	public void buscarPrefijoElementos(String p, Lista<T> lista, int charNum, boolean b)
+	{
+		if(character=='\0')
+		{
+			if(child!=null)
+			{
+				child.buscarPrefijoElementos(p, lista, charNum,false);
+			}
+			else
+			{
+
+			}
+		}
+		else
+		{
+			if(character==p.charAt(charNum))
+			{
+				if(element instanceof Lista)
+					lista.addAll((Lista)element);
+				else
+					lista.addAlFinal(element);
+				if(p.length()-1==charNum)
+					b=true;
+				else if(child !=null)
+					child.buscarPrefijoElementos(p, lista, charNum+1, b);
+			}
+			else
+			{
+				if(b)
+				{
+					if(element instanceof Lista)
+						lista.addAll((Lista)element);
+					else
+						lista.addAlFinal(element);
+					if(child!=null)
+						child.buscarPrefijoElementos(p, lista, charNum, b);
+					if(sibling!=null)
+						sibling.buscarPrefijoElementos(p, lista, charNum, b);
+				}
+				else
+				{
+					if(sibling!=null)
+						sibling.buscarPrefijoElementos(p, lista, charNum, b);
+				}
+			}
+		}
+	}
+	
+	
 
 
 
 }
+
