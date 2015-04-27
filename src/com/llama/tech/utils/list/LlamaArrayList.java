@@ -20,13 +20,17 @@
 
 package com.llama.tech.utils.list;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class LlamaArrayList<T> implements Lista<T>, Serializable{
+import com.llama.tech.misc.XMLFormat;
+
+public class LlamaArrayList<T> extends XMLFormat implements Lista<T>, Serializable{
 
 	private T[] lista;
 	int posActual;
@@ -342,7 +346,7 @@ public class LlamaArrayList<T> implements Lista<T>, Serializable{
 				info += item.toString()+", ";
 			}
 		}
-		
+		info = info.substring(0, info.length()-2);
 		info += "]";
 		
 		return info;
@@ -356,8 +360,38 @@ public class LlamaArrayList<T> implements Lista<T>, Serializable{
 		return copy;
 	}
 
-	
+	@Override
+	public String toXML() 
+	{
+		String content = "<list>\n";
+		for(int i = 0; i < posActual; i++)
+		{
+			content += "<item";
+			T elem = lista[i];
+			if(elem != null)
+			{
+				if(elem instanceof XMLFormat)
+				{
+					content += ">\n"+((XMLFormat) elem).toXML()+"</item>\n";			
+				}
+				else
+				{
+					content += " value = \""+elem.toString()+"\"/>\n";
+				}
+			}
+			else
+			{
+				content += "/>\n";
+			}
+		}
+		content += "</list>\n";
+		return content;
+	}
 
-
+	@Override
+	public void readXML() 
+	{
+		
+	}
 
 }

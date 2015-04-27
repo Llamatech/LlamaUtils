@@ -1,11 +1,33 @@
+/*
+ * TrieNode.java
+ * This file is part of LlamaUtils
+ *
+ * Copyright (C) 2015 - LlamaTech Team 
+ *
+ * LlamaUtils is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LlamaUtils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LlamaUtils. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 package com.llama.tech.utils.tree;
 
 import java.util.Iterator;
 
+import com.llama.tech.misc.XMLFormat;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class TrieNode<T> 
+public class TrieNode<T> extends XMLFormat
 {
 	private char character;
 
@@ -49,7 +71,7 @@ public class TrieNode<T>
 		int index = 0;
 		while(index < word.length())
 		{
-			TrieNode<T> childS = node.getSibling(word.charAt(index));
+			TrieNode<T> childS = node.getSibling(Character.toLowerCase(word.charAt(index)));
 			if(childS != null)
 			{
 				node = childS;
@@ -64,7 +86,7 @@ public class TrieNode<T>
 
 		while(index < word.length())
 		{
-			node = node.appendNode(word.charAt(index));
+			node = node.appendNode(Character.toLowerCase(word.charAt(index)));
 			index++;
 		}
 
@@ -197,7 +219,7 @@ public class TrieNode<T>
 		int i = 0;
 		while(i < word.length())
 		{
-			node = node.getSibling(word.charAt(i));
+			node = node.getSibling(Character.toLowerCase(word.charAt(i)));
 			if(node == null)
 			{
 				found = false;
@@ -317,7 +339,7 @@ public class TrieNode<T>
 				child=null;
 				sibling=null;
 			}
-			else if(character==word.charAt(charNum))
+			else if(character==Character.toLowerCase(word.charAt(charNum)))
 			{
 				wordWIP+=character;
 
@@ -390,7 +412,7 @@ public class TrieNode<T>
 		}
 		else
 		{
-			if(character == word.charAt(charNum))
+			if(character == Character.toLowerCase(word.charAt(charNum)))
 			{
 				if(isWord && charNum==word.length()-1)
 				{
@@ -412,7 +434,7 @@ public class TrieNode<T>
 			}
 			else
 			{
-				if(character > word.charAt(charNum)||sibling==null)
+				if(character > Character.toLowerCase(word.charAt(charNum))||sibling==null)
 				{
 					return null;
 				}
@@ -456,7 +478,7 @@ public class TrieNode<T>
 				}
 
 			}
-			else if(character==p.charAt(charNum))
+			else if(character==Character.toLowerCase(p.charAt(charNum)))
 			{
 				wordWIP+=character;
 				if(p.length()-1==charNum)
@@ -469,7 +491,7 @@ public class TrieNode<T>
 			else
 			{
 
-				if(sibling!=null&&character<p.charAt(charNum))
+				if(sibling!=null&&character<Character.toLowerCase(p.charAt(charNum)))
 					sibling.buscarPrefijo(p, lista, charNum, b, wordWIP);
 			}
 		}
@@ -538,6 +560,14 @@ public class TrieNode<T>
 
 	public String buscarHijosPrefijo(String p, int charNum)
 	{
+		//System.out.println(p);
+		if(p.equals(""))
+		{
+			if(child!=null)
+				return getTodosMisHijos();
+			else
+				return "";
+		}
 		if(character=='\0')
 		{
 			if(child!=null)
@@ -551,24 +581,36 @@ public class TrieNode<T>
 		}
 		else
 		{
-			if(character==p.charAt(charNum))
+			try
 			{
-
-				if(p.length()-1==charNum)
-					return getTodosMisHijos();
-				else if(child !=null)
-					return child.buscarHijosPrefijo(p, charNum+1);
+				if(character==Character.toLowerCase(p.charAt(charNum)))
+				{
+	
+					if(p.length()-1==charNum)
+					{
+						if(child!=null)
+							return getTodosMisHijos();
+						else
+							return "";
+					}
+					else if(child !=null)
+						return child.buscarHijosPrefijo(p, charNum+1);
+					else
+						return"";
+				}
 				else
-					return"";
+				{
+	
+					if(sibling!=null)
+						return sibling.buscarHijosPrefijo(p, charNum);
+					else
+						return "";
+	
+				}
 			}
-			else
+			catch(StringIndexOutOfBoundsException s)
 			{
-
-				if(sibling!=null)
-					return sibling.buscarHijosPrefijo(p, charNum);
-				else
-					return "";
-
+				return "";
 			}
 		}
 	}
@@ -606,7 +648,7 @@ public class TrieNode<T>
 		}
 		else
 		{
-			if(character==p.charAt(charNum))
+			if(character==Character.toLowerCase(p.charAt(charNum)))
 			{
 				if(element instanceof Lista)
 					lista.addAll((Lista)element);
@@ -637,6 +679,55 @@ public class TrieNode<T>
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toXML() 
+	{
+		 if(character != '\0')
+		 {
+		     StringBuilder sb = new StringBuilder();
+		     sb.append(String.format(" character = \"%c\" isWord = \"%s\">\n", character, isWord));
+		     if(this.isWord)
+		     {
+		    	 sb.append("<element ");
+		    	 if(element instanceof XMLFormat)
+		    	 {
+		    		 sb.append(">\n");
+		    		 sb.append(((XMLFormat) element).toXML());
+		    		 sb.append("</element>\n");
+		    	 }
+		    	 else
+		    	 {
+		    		 sb.append(String.format("value = \"%s\"/>\n", element.toString()));
+		    	 }
+		     }
+		     if(this.child != null)
+		     {
+		    	 sb.append("<child");
+		    	 sb.append(child.toXML());
+		    	 sb.append("</child>\n");
+		     }
+		     
+		     if(this.sibling != null)
+		     {
+		    	sb.append("<sibling");
+		    	sb.append(sibling.toXML());
+		    	sb.append("</sibling>\n");
+		     }
+		     
+		     return sb.toString();
+		 }
+		 else
+		 {
+			 return (child != null) ? "<child"+child.toXML()+"</child>\n": "\n";
+		 }
+	}
+
+	@Override
+	public void readXML() 
+	{
+		
 	}
 	
 	

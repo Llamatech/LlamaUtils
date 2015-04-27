@@ -20,6 +20,7 @@
 
 package com.llama.tech.utils.list;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class ListaSimplementeEnlazada<ClaseGenerica extends Comparable<ClaseGenerica>> implements Lista<ClaseGenerica>,Serializable{
@@ -512,6 +513,18 @@ public class ListaSimplementeEnlazada<ClaseGenerica extends Comparable<ClaseGene
 		{
 			addAlFinal(elem);
 		}
+		
+	}
+
+	@Override
+	public String toXML() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void writeXML(String path) throws IOException {
+		// TODO Auto-generated method stub
 		
 	}
 

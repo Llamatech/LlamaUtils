@@ -20,9 +20,9 @@
 
 package com.llama.tech.utils.list;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.List;
 
 
 
@@ -164,4 +164,8 @@ public interface Lista<ClaseGenerica> extends Serializable, Iterable<ClaseGeneri
 	public int size();
 	
 	public void addAll(Lista<ClaseGenerica> l);
+	
+    public String toXML();
+	
+	public void writeXML(String path) throws IOException;
 }

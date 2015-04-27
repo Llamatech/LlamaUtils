@@ -1,22 +1,46 @@
+/*
+ * LlamaTrie.java
+ * This file is part of LlamaUtils
+ *
+ * Copyright (C) 2015 - LlamaTech Team 
+ *
+ * LlamaUtils is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LlamaUtils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LlamaUtils. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.llama.tech.utils.tree;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Iterator;
-
-import javax.imageio.ImageTranscoder;
 
 import co.edu.uniandes.estructuras.trie.ITrie;
 
 import com.llama.tech.misc.LlamaText;
-import com.llama.tech.misc.LlamaText.TextSegmentationException;
+import com.llama.tech.misc.XMLFormat;
 import com.llama.tech.utils.dict.LlamaDict;
 import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class LlamaTrie<T>  implements ITrie<T>
+public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 {	
 	public TrieNode<T> root;
-	private LlamaDict<Character,String> distinguished_sym = new LlamaDict<Character,String>(10);
+	private LlamaDict<Character,String> distinguished_sym = new LlamaDict<Character,String>(20);
 
 	public LlamaTrie()
 	{
@@ -26,13 +50,6 @@ public class LlamaTrie<T>  implements ITrie<T>
 			distinguished_sym.addEntry('.', "Dot");
 			distinguished_sym.addEntry(',', "Comma");
 			distinguished_sym.addEntry(';', "Semi-Colon");
-			distinguished_sym.addEntry('¿', "Interrogation_Opening");
-			distinguished_sym.addEntry('?', "Interrogation_Closing");
-			distinguished_sym.addEntry('¡', "Exclamation_Opening");
-			distinguished_sym.addEntry('!', "Exclamation_Closing");
-			distinguished_sym.addEntry('«', "L_Guillemet");
-			distinguished_sym.addEntry('»', "R_Guillemet");
-			distinguished_sym.addEntry(' ', "Space");
 
 		} 
 		catch (UnhashableTypeException e) 
@@ -63,72 +80,67 @@ public class LlamaTrie<T>  implements ITrie<T>
 
 	}
 
-
+	
 	public static void main(String... args)
 	{
 		LlamaTrie<String> trie = new LlamaTrie<String>();
-		trie.agregar("Torre", "Torre");		
-		trie.agregar("Toma", "Toma");
-		trie.agregar("Torreón", "Torreón");
-		trie.agregar("Tomate", "A");
-		trie.agregar("Tomate", "B");
-		trie.agregar("Tomar", "Tomar");
-		trie.agregar("Torrijos", "Torrijos");
-		trie.agregar("Tornado", "Tornado");
-		trie.agregar("Torta", "Torta");
-		trie.agregar("Tormenta", "Tormenta");
-		trie.agregar("Torno", "Torno");
-		trie.agregar("Tornar", "Tornar");
-		trie.agregar("Tornasol", "Tornasol");
-		trie.agregar("Antes", "Antes");
-
-		System.out.println(trie);	
-		//		Iterator<String> it = trie.eliminarPalabrasConPrefijo("Tom");
-		Iterator<String> it = trie.buscarPalabrasConPrefijo("Tom");
-
-		while (it.hasNext())
-		{
-			System.out.println(it.next());
-		}
-
-
-
-		System.out.println(trie.buscar("Toma"));
-
-		trie.agregar("casado", "Casado");
-		trie.agregar("casa", "Casa");
-		trie.agregar("caso", "Caso");
-		trie.agregar("doy", "doy");
-		trie.agregar("y", "y");
-
-		String text = "casadoy.casadoy?";
 		
-		LlamaArrayList<String> l = null;
-		try {
-			l = trie.text_segmentation(text);
-		} catch (TextSegmentationException e) 
+		File f = new File("./data/misc/diccionario.dic");
+		String text = "";
+		try 
+		{
+			FileInputStream fis = new FileInputStream(f);
+			try(BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF8")))
+			{
+				String line;
+				while((line = br.readLine()) != null)
+				{
+					trie.agregar(line, line);
+				}
+			} 
+			catch (IOException e) 
+			{
+				
+			}
+			
+			System.out.println(trie);
+			f = new File("./data/misc/a3.txt.ocr");
+			fis = new FileInputStream(f);
+			try(BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF8")))
+			{
+				String line;
+				while((line = br.readLine()) != null)
+				{
+					text += line;
+				}
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			
+		} 
+		catch (FileNotFoundException e) 
 		{
 			e.printStackTrace();
 		}
-		for(String s: l)
-		{
-			System.out.println(s);
-		}
 		
-		l.clear();
-		text = "cas|doy casadoy";
-		System.out.println("Segmentar: "+text);
-		try {
-			l = trie.text_segmentation(text);
-		} catch (TextSegmentationException e) 
+				LlamaArrayList<String> list = trie.text_segmentation(text, true);
+				for(String s: list)
+				{
+					System.out.println(s);
+				}
+		
+		
+		try 
 		{
+			trie.writeXML("./data/misc/trie.xml");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		for(String s: l)
-		{
-			System.out.println("Resultado: "+s);
-		}
-
+		
 	}
 
 	public T eliminar(String word) 
@@ -170,68 +182,86 @@ public class LlamaTrie<T>  implements ITrie<T>
 		return root.getSize();
 	}
 
-	public LlamaArrayList<String> text_segmentation(String text) throws TextSegmentationException
+	public LlamaArrayList<String> text_segmentation(String text, boolean flag)
 	{
 		LlamaArrayList<String> l = new LlamaArrayList<String>(10);
 		LlamaArrayList<String> bif_tree = new LlamaArrayList<String>(10);
 		
-		LlamaArrayList<String> text_p = preProcess_text(text);
+		LlamaArrayList<String> text_p = preProcess_text(text, flag);
 		
-		System.out.println(text_p);
+		//System.out.println(text_p);
+		String gen_text = "";
 
-		for(String fragment: text_p)
+		if(flag)
 		{
-			l.clear();
-			if(fragment != "")
+			for(String fragment: text_p)
 			{
-				if(distinguished_sym.getValue(fragment.charAt(0)) != null)
+				if(fragment != "")
 				{
-					if(bif_tree.size() == 0)
+					if(distinguished_sym.getValue(fragment.charAt(0)) != null)
 					{
-						bif_tree.addAlFinal(fragment);	
+						gen_text += fragment;
+//						if(bif_tree.size() == 0)
+//						{
+//							bif_tree.addAlFinal(fragment);	
+//						}
+//						else
+//						{
+//							for(int i = 0; i < bif_tree.size(); i++)
+//							{
+//								bif_tree.set(i, bif_tree.get(i)+fragment);
+//							}
+//						}
 					}
 					else
 					{
-						for(int i = 0; i < bif_tree.size(); i++)
+						l.clear();
+						break_words(fragment, fragment.length(), l, "");
+						if(l.size() > 0)
 						{
-							bif_tree.set(i, bif_tree.get(i)+fragment);
-						}
-					}
-				}
-				else
-				{
-					break_words(fragment, fragment.length(), l, "");
-					if(l.size() > 0)
-					{
-						if(bif_tree.size() == 0)
-						{
-							bif_tree = l.clone();
+							
+							gen_text += l.get(l.size()/2);
+//							if(bif_tree.size() == 0)
+//							{
+//								bif_tree = l.clone();
+//							}
+//							else
+//							{
+//								LlamaArrayList<String> copy = bif_tree.clone();
+//								for(int i = 0; i < bif_tree.size(); i++)
+//								{
+//									bif_tree.set(i, bif_tree.get(i)+l.get(0));
+//								}
+//								for(int i = 1; i < l.size(); i++)
+//								{
+//									for(String preRes: copy)
+//									{
+//										bif_tree.addAlFinal(preRes+l.get(i));
+//									}
+//								}
+//								
+//							}
 						}
 						else
 						{
-							LlamaArrayList<String> copy = bif_tree.clone();
-							for(int i = 0; i < bif_tree.size(); i++)
-							{
-								bif_tree.set(i, bif_tree.get(i)+l.get(0));
-							}
-							for(int i = 1; i < l.size(); i++)
-							{
-								for(String preRes: copy)
-								{
-									bif_tree.addAlFinal(preRes+l.get(i));
-								}
-							}
+							//throw new LlamaText.TextSegmentationException(
+							//		  String.format(
+							//		  "El fragmento: %s, no contiene ninguna palabra válida",
+							//		  fragment));
 						}
-					}
-					else
-					{
-						throw new LlamaText.TextSegmentationException(
-								  String.format(
-								  "El fragmento: %s, no contiene ninguna palabra válida",
-								  fragment));
 					}
 				}
 			}
+			
+			gen_text.replace(",", ", ");
+			gen_text.replace(".", ". ");
+			gen_text.replace(";", "; ");
+			
+			bif_tree.addAlFinal(gen_text);
+		}
+		else
+		{
+			break_words(text_p.get(0), text_p.get(0).length(), bif_tree, "");
 		}
 
 		//break_words(text, text.length(), l, "");
@@ -239,13 +269,38 @@ public class LlamaTrie<T>  implements ITrie<T>
 
 	}
 
-	public LlamaArrayList<String> preProcess_text(String text)
+	public LlamaArrayList<String> preProcess_text(String text, boolean spacing)
 	{
-		char[] common_char = {',', ';', '¿', '?', '¡', '!', '«', '»',' '};
-		LlamaArrayList<String> preProc = LlamaText.splitItemBy(text, '.');
-		for(Character c: common_char)
+		char[] common_char = {',', ';'};//, '¿', '?', '¡', '!', '«', '»',' ', '(', ')', '-'};
+		LlamaArrayList<String> preProc;
+		if(spacing)
 		{
-			preProc = LlamaText.splitItemsBy(preProc, c);
+			preProc = LlamaText.splitItemBy(text, '.');
+			for(Character c: common_char)
+			{
+				preProc = LlamaText.splitItemsBy(preProc, c);
+			}
+		}
+		else
+		{
+			preProc = new LlamaArrayList<String>(1);
+			char[] split_sym = {'.', ',', ';'};
+			String[] split_arr;
+			for(Character c: split_sym)
+			{
+				split_arr = text.split("["+c+"]");
+				if(split_arr.length > 1)
+				{
+					text = "";
+					for(String s: split_arr)
+					{
+						text += s;
+					}
+				}
+			}
+			
+			preProc.addAlFinal(text);
+			
 		}
 		return preProc;
 
@@ -303,6 +358,20 @@ public class LlamaTrie<T>  implements ITrie<T>
 		root.buscarPrefijoElementos(p, lista, 0, false);
 		return lista.iterator();
 
+	}
+
+	@Override
+	public String toXML() 
+	{
+		String format = String.format("<Trie numWords = \"%d\">\n", root.getSize());
+		return format+root.toXML()+"</Trie>";
+	}
+
+	@Override
+	public void readXML() 
+	{
+		// TODO Auto-generated method stub
+		
 	}  
 
 	//	def text_segmentation(self, text):

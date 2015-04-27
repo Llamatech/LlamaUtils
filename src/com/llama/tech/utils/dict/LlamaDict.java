@@ -24,14 +24,19 @@ package com.llama.tech.utils.dict;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import com.llama.tech.misc.XMLFormat;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.ListaDoblementeEnlazada;
 import com.llama.tech.utils.list.LlamaArrayList;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> implements Dictionary<K, V>, Serializable, Comparable<LlamaDict<K, V>>
+public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends XMLFormat implements Dictionary<K, V>, Serializable, Comparable<LlamaDict<K, V>>
 {
-	 private int size = 0;
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int size = 0;
      private double capacity = 0;
 	 private int mainAreaSize = 0;
 	 private Lista<DictEntry<K, V>> mainArea;
@@ -256,7 +261,12 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 	
 	 public static class UnhashableTypeException extends Exception
 	 {
-		 public UnhashableTypeException(String msj)
+		 /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public UnhashableTypeException(String msj)
 		 {
 		 	 super(msj);
 		 }
@@ -278,6 +288,48 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> impleme
 	public Iterator<K> iterator() 
 	{
 		return getKeys();
+	}
+
+	@Override
+	public String toXML() 
+	{
+		String content = "<dict>\n";
+		Iterator<K> keys = getKeys();
+		while(keys.hasNext())
+		{
+			content += "<key";
+			K key = keys.next();
+			if(key instanceof XMLFormat)
+			{
+				content += ">\n"+((XMLFormat) key).toXML();
+			}
+			else
+			{
+				content += " value = \""+key.toString()+"\">\n";
+			}
+			content += "<value";
+			V value = getValue(key);
+			if(value instanceof XMLFormat)
+			{
+				content += ">\n"+((XMLFormat) value).toXML()+"</value>\n";
+			}
+			else
+			{
+				content += " value = \""+value.toString()+"\" />\n";
+			}
+			content += "</key>\n";
+		}
+		
+		content += "</dict>\n";
+		
+		return content;
+	}
+
+	@Override
+	public void readXML() 
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 	 

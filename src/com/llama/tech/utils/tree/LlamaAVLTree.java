@@ -20,6 +20,7 @@
 
 package com.llama.tech.utils.tree;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -450,15 +451,22 @@ public class LlamaAVLTree <T extends Comparable<T>> extends XMLFormat implements
 
 
 	@Override
-	public String toXML() 
-	{
+	public void writeXML() throws FileNotFoundException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String toXML() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void readXML() {
 		// TODO Auto-generated method stub
-
+		
 	}
+
 
 }

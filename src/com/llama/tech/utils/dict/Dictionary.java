@@ -20,9 +20,11 @@
 
 package com.llama.tech.utils.dict;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
+import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaIterator;
 
 public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> extends Serializable, Iterable<K>
@@ -83,5 +85,10 @@ public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> ex
 	  * @return total de entradas 
 	  */
 	 public int size();
+	 
+		
+	 public String toXML();
+		
+     public void writeXML(String path) throws IOException;
 	 
 }
