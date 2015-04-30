@@ -49,12 +49,19 @@ public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A>
 		return origin;
 	}
 
-	public void setOrigin(GraphVertex<K, V, A> origin) {
+	public void setOrigin(GraphVertex<K, V, A> origin) 
+	{
 		this.origin = origin;
 	}
 
-	public void setDestination(GraphVertex<K, V, A> destination) {
+	public void setDestination(GraphVertex<K, V, A> destination) 
+	{
 		this.destination = destination;
+	}
+	
+	public void setWeight(A weight)
+	{
+		this.weight = weight;
 	}
 	
 	

@@ -80,8 +80,22 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 
 	public void addEdge(GraphVertex<K, V, A> vertex, A weight)
 	{
-		GraphEdge<K, V, A> edge = new GraphEdge<K, V, A>(this, vertex, weight);
-		edges.addAlFinal(edge);
+		boolean modified = false;
+		for(GraphEdge<K, V, A> edge: edges)
+		{
+			if(edge.getDestination().compareTo(vertex) == 0)
+			{
+				edge.setWeight(weight);
+				modified = true;
+				break;
+			}
+		}
+		
+		if(!modified)
+		{
+			GraphEdge<K, V, A> edge = new GraphEdge<K, V, A>(this, vertex, weight);
+			edges.addAlFinal(edge);
+		}
 	}
 	
 	public void removeEdge(GraphEdge<K, V, A> e)
