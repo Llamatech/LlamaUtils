@@ -1,9 +1,29 @@
+/*
+ * GraphVertex.java
+ * This file is part of LlamaUtils
+ *
+ * Copyright (C) 2015 - LlamaTech Team 
+ *
+ * LlamaUtils is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LlamaUtils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LlamaUtils. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.llama.tech.utils.graph;
 
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> 
+public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V, A>>
 {
 	private K key;
 	private V value;
@@ -57,49 +77,21 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A>
 	{
 		edges.addAlFinal(edge);
 	}
-	
-	public void addEdge(K to, V value, A weight)
+
+	public void addEdge(GraphVertex<K, V, A> vertex, A weight)
 	{
-		GraphVertex<K, V, A> temp = new GraphVertex<K, V, A>(to, value);
-		GraphEdge<K, V, A> edge_1 = new GraphEdge<K, V, A>(this, temp, weight);
-		GraphEdge<K, V, A> edge_2 = new GraphEdge<K, V, A>(temp, this, weight);
-		edges.addAlFinal(edge_1);
-		temp.addNeighbor(edge_2);
+		GraphEdge<K, V, A> edge = new GraphEdge<K, V, A>(this, vertex, weight);
+		edges.addAlFinal(edge);
 	}
 	
-	public void setEdge(GraphVertex<K, V, A> vertex, A weight)
-	{		
-		boolean exists = false;
-		for(GraphEdge<K, V, A> edge : edges)
-		{
-			GraphVertex<K, V, A> neighbor = edge.getDestination();
-			if(neighbor.equals(vertex))
-			{
-				exists = true;
-				break;
-			}
-		}
-		if(!exists)
-		{
-			GraphEdge<K, V, A> edge_1 = new GraphEdge<K, V, A>(this, vertex, weight);
-			GraphEdge<K, V, A> edge_2 = new GraphEdge<K, V, A>(vertex, this, weight);
-			edges.addAlFinal(edge_1);
-			vertex.addNeighbor(edge_2);
-		}
+	public void removeEdge(GraphEdge<K, V, A> e)
+	{
+		edges.remove(e);
 	}
-	
-//	boolean exists = false;
-//	for(GraphEdge<K, V, A> edge : edges)
-//	{
-//		GraphVertex<K, V, A> neighbor = edge.getDestination();
-//		if(neighbor.getKey().compareTo(to) == 0)
-//		{
-//			exists = true;
-//			neighbor.setValue(value);
-//		}
-//	}
-//	if(!exists)
-//	{
-//		
-//	}
+
+	@Override
+	public int compareTo(GraphVertex<K, V, A> vertex) 
+	{
+		return key.compareTo(vertex.getKey());
+	}
 }

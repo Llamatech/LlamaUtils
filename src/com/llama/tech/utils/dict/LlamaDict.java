@@ -54,14 +54,14 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 	 }
 	 
 	 @Override
-	 public void addEntry(K key, V value) throws UnhashableTypeException
+	 public void addEntry(K key, V value)
 	 {
 		 if(key == null && value !=  null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
 		 else if(key != null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
 		 else if(key == null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key, value));
        
 		 capacity = size/((double) mainAreaSize);
 		 if(capacity >= 0.8)
@@ -84,14 +84,14 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 	 }
 	  
 	 @Override
-	 public V setEntry(K key, V value) throws UnhashableTypeException
+	 public V setEntry(K key, V value)
 	 {
 		 if(key == null && value !=  null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key, value.toString()));
 		 else if(key != null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key.toString(), value));
 		 else if(key == null && value == null)
-			 throw new UnhashableTypeException(String.format("The pair: <%s : %s>, is invalid", key, value));
+			 throw new IllegalArgumentException(String.format("The pair: <%s : %s>, is invalid", key, value));
 		 
 		 
 		 int pos = Math.floorMod(key.hashCode(), mainAreaSize);

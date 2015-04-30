@@ -45,17 +45,10 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 	public LlamaTrie()
 	{
 		root = new TrieNode<T>();
-		try 
-		{
 			distinguished_sym.addEntry('.', "Dot");
 			distinguished_sym.addEntry(',', "Comma");
 			distinguished_sym.addEntry(';', "Semi-Colon");
 
-		} 
-		catch (UnhashableTypeException e) 
-		{
-
-		}
 	}
 
 	public void agregarT(String word, T elem)

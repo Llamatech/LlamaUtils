@@ -50,7 +50,7 @@ public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> ex
 	  * @param value valor a agregar en la tabla
 	  * @throws UnhashableTypeException Si se agregan un valor o llaves inválidos
 	  */
-	 public void addEntry(K key, V value) throws UnhashableTypeException;
+	 public void addEntry(K key, V value);
 	 
 	 /**
 	  * Reemplaza la entrada de la tabla correspondiente a la llave
@@ -60,7 +60,7 @@ public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> ex
 	  * @return valor reemplazado
 	  * @throws UnhashableTypeException si el valor dado por parámetro es inválido
 	  */
-	 public V setEntry(K key, V value) throws UnhashableTypeException;
+	 public V setEntry(K key, V value);
 	 
 	 /**
 	  * Retorna un iterador sobre las llaves de la tabla

@@ -18,7 +18,7 @@ public class DictionaryTest extends TestCase
 		dict = new LlamaDict<String, Integer>(10);
 	}
 	
-	public void setUpEscenario2() throws UnhashableTypeException
+	public void setUpEscenario2()
 	{
 		dict = new LlamaDict<String, Integer>(20);
 		for(int i = 0; i < 3545; i++)
@@ -28,7 +28,7 @@ public class DictionaryTest extends TestCase
 		
 	}
 	
-	public void setUpEscenario3() throws UnhashableTypeException
+	public void setUpEscenario3()
 	{
 		dict = new LlamaDict<String, Integer>(2);
 		dict.addEntry("1", 1);
@@ -47,19 +47,11 @@ public class DictionaryTest extends TestCase
 		{
 			
 		}
-		try 
-		{
 			setUpEscenario2();
 			int value = new Random().nextInt(3545);
 			assertEquals("El método debería retornar "+value, value, (int) dict.getValue(String.valueOf(value)));
 			assertEquals("El método debería retornar 1", 1, (int) dict.getValue("1"));
 			assertEquals("El método debería retornar null", null, dict.getValue("3545345"));
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
 	}
 	
 	
@@ -68,8 +60,6 @@ public class DictionaryTest extends TestCase
 		setUpEscenario1();
 		int value = new Random().nextInt(3545);
 		assertEquals("El método debería retornar null", null, dict.removeEntry(String.valueOf(value)));
-		try 
-		{
 			setUpEscenario2();
 			try
 			{
@@ -109,13 +99,6 @@ public class DictionaryTest extends TestCase
 				npe.printStackTrace();
 			}
 			
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			fail(e.getMessage());
-		}
-		try 
-		{
 			setUpEscenario3();
 			int size_pre = dict.size();
 			int v = dict.removeEntry("1");
@@ -139,46 +122,28 @@ public class DictionaryTest extends TestCase
 			
 			
 			
-		} 
-		catch (UnhashableTypeException e) 
-		{
-		    fail(e.getMessage());
-		}	
 	}
 	
 	public void testAddEntry()
 	{
 		setUpEscenario1();
-		try 
-		{
+
 			int size_pre = dict.size();
 			dict.addEntry("2", 2);
 			int size_post = dict.size();
 			assertEquals("El método debería retornar "+2, 2, (int) dict.getValue("2"));
 			assertEquals("El nuevo tamaño del diccionario debería ser: "+size_post, size_post-1, size_pre);
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			e.printStackTrace();
-		}
+
 		
-		try 
-		{
+
 			dict.addEntry(null, null);
 			fail("El método debería enviar una excepción");
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			
-		}
 		
-		try 
-		{
 			setUpEscenario3();
-			int size_pre = dict.size();
+			size_pre = dict.size();
 			int value = new Random().nextInt((9999 - 3546) + 1) + 3545;
 			dict.addEntry(String.valueOf(value), value);
-			int size_post = dict.size();
+			size_post = dict.size();
 
 			LlamaIterator<String> it = dict.getKeys();
 			boolean found = false;
@@ -199,28 +164,15 @@ public class DictionaryTest extends TestCase
 			dict.addEntry(String.valueOf(value), value+9);
 			assertEquals(String.format("El valor de la llave: %d, debería corresponder a %d.", value, value+9), value+9, (int) dict.getValue(String.valueOf(value)));
 			
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			fail("La inicialización no debería ser fallida.");
-		}
 		
 	}
 	
 	public void testSetEntry()
 	{
 		setUpEscenario1();
-		try 
-		{
 			assertEquals("El método debería retornar null", null, dict.setEntry("1", 1));
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			fail("El método no debería emitir una excepción.");
-		}
+ 
 		
-		try 
-		{
 			setUpEscenario2();
 			int pre_v = dict.getValue("1");
 			int extract = dict.setEntry("1", 8);
@@ -230,11 +182,6 @@ public class DictionaryTest extends TestCase
 			assertEquals("El nuevo valor debería corresponder a: "+8, 8, post_v);
 			
 			
-		} 
-		catch (UnhashableTypeException e) 
-		{
-			fail("El método no debería emitir una excepción.");
-		}
 		
 	}
 	

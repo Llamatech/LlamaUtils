@@ -177,15 +177,9 @@ public class TreeTest extends TestCase
 			{
 				l[i] = new Random().nextInt(4000)+1;
 			}
-			try 
-			{
 				d.addEntry(l[i], l[i]);
 				tree.add(l[i]);
-			} 
-			catch (UnhashableTypeException e) 
-			{
-				fail("El método no debería arrojar excepción.");
-			}
+ 
 		}
 		
 		Iterator<Integer> it = d.getKeys();
@@ -242,15 +236,9 @@ public class TreeTest extends TestCase
 			{
 				l[i] = new Random().nextInt(4000)+1;
 			}
-			try 
-			{
+
 				d.addEntry(l[i], l[i]);
 				//tree.add(l[i]);
-			} 
-			catch (UnhashableTypeException e) 
-			{
-				fail("El método no debería arrojar excepción.");
-			}
 		}
 		tree.copyArray(l);
 		int len = d.size();
