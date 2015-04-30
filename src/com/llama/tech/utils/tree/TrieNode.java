@@ -560,7 +560,7 @@ public class TrieNode<T> extends XMLFormat
 
 	public String buscarHijosPrefijo(String p, int charNum)
 	{
-		//System.out.println(p);
+		//
 		if(p.equals(""))
 		{
 			if(child!=null)

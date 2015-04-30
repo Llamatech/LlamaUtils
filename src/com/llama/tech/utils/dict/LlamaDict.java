@@ -115,7 +115,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 
 		 if(primero != null && primero.getMyValue() != null)
 		 {
-			 System.out.println("Here!");
+			 
 			 if(primero.getMyKey().equals(key))
 			 {
 				 rem=primero.getMyValue();

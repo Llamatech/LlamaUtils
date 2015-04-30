@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 public abstract class XMLFormat 
 {
 	private String form;
-	private static final String HEADER = "<?xml version="+"\"1.0\""+" encoding="+"\"UTF-8\""+"?>\n";
+	public static final String HEADER = "<?xml version="+"\"1.0\""+" encoding="+"\"UTF-8\""+"?>\n";
 	
 	public abstract String toXML();
 	public abstract void readXML();

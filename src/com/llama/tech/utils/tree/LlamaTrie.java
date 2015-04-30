@@ -103,8 +103,8 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 				
 			}
 			
-			System.out.println(trie);
-			f = new File("./data/misc/a3.txt.ocr");
+			
+			f = new File("./data/misc/a1.txt.ocr");
 			fis = new FileInputStream(f);
 			try(BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF8")))
 			{
@@ -128,10 +128,8 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 				LlamaArrayList<String> list = trie.text_segmentation(text, true);
 				for(String s: list)
 				{
-					System.out.println(s);
+					
 				}
-		
-		
 		try 
 		{
 			trie.writeXML("./data/misc/trie.xml");
@@ -189,7 +187,7 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 		
 		LlamaArrayList<String> text_p = preProcess_text(text, flag);
 		
-		//System.out.println(text_p);
+		
 		String gen_text = "";
 
 		if(flag)
@@ -250,8 +248,10 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 							//		  fragment));
 						}
 					}
+					
 				}
 			}
+			
 			
 			gen_text.replace(",", ", ");
 			gen_text.replace(".", ". ");
@@ -308,9 +308,11 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 
 	private void break_words(String text, int size, LlamaArrayList<String> l, String result)
 	{
+		//
 		for(int i = 1; i <= size; i++)
 		{
 			String prefix = text.substring(0, i);
+			
 			if(prefix.contains("|"))
 			{
 				int index = prefix.indexOf("|");
@@ -321,6 +323,7 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 					String nPrefix = prefix.replace('|', probs.charAt(j));
 					if(buscar(nPrefix) != null)
 					{
+						    
 							if(i == size)
 							{
 								result += nPrefix;
@@ -337,6 +340,7 @@ public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 			{
 				if(i == size)
 				{
+					
 					result += prefix;
 					l.addAlFinal(result);
 					break;
