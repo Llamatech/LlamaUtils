@@ -141,7 +141,7 @@ public class LlamaArrayList<T> extends XMLFormat implements Lista<T>, Serializab
 	@Override
 	public synchronized T getLast() {
 		if(posActual!=0)
-			return lista[lista.length-1];
+			return lista[posActual-1];
 		return null;
 	}
 
