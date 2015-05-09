@@ -23,30 +23,30 @@ package com.llama.tech.utils.graph;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>> implements Comparable<GraphVertex<K, V>>
+public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V,A>>
 {
 	private K key;
 	private V value;
 	
 	private boolean visited = false;
-	private Lista<GraphEdge<K, V>> edgesTo;
-	private Lista<GraphEdge<K, V>> edgesFrom;
+	private Lista<GraphEdge<K, V,A>> edgesTo;
+	private Lista<GraphEdge<K, V,A>> edgesFrom;
 
 	
 	public GraphVertex(K key, V value) 
 	{
 		this.key = key;
 		this.value = value;
-		edgesTo = new LlamaArrayList<GraphEdge<K, V>>(5);
-		edgesFrom = new LlamaArrayList<GraphEdge<K, V>>(5);
+		edgesTo = new LlamaArrayList<GraphEdge<K, V,A>>(5);
+		edgesFrom = new LlamaArrayList<GraphEdge<K, V,A>>(5);
 	}
 	
-	public Lista<GraphEdge<K, V>> getEdgesTo()
+	public Lista<GraphEdge<K, V,A>> getEdgesTo()
 	{
 		return edgesTo;
 	}
 	
-	public Lista<GraphEdge<K, V>> getEdgesFrom()
+	public Lista<GraphEdge<K, V,A>> getEdgesFrom()
 	{
 		return edgesFrom;
 	}
@@ -81,20 +81,21 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>> imple
 		visited = false;
 	}
 	
-	public void addNeighbor(GraphEdge<K, V> edge)
+	public void addNeighbor(GraphEdge<K, V,A> edge)
 	{
 		edgesTo.addAlFinal(edge);
 		//TODO
 	}
 
-	public void addEdge(GraphVertex<K, V> vertex, int weight)
+	public void addEdge(GraphVertex<K, V,A> vertex, int weight, A label)
 	{
 		boolean modified = false;
-		for(GraphEdge<K, V> edge: edgesTo)
+		for(GraphEdge<K, V,A> edge: edgesTo)
 		{
 			if(edge.getDestination().compareTo(vertex) == 0)
 			{
 				edge.setWeight(weight);
+				edge.setLabel(label);
 				modified = true;
 				break;
 			}
@@ -102,24 +103,24 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>> imple
 		
 		if(!modified)
 		{
-			GraphEdge<K, V> edge = new GraphEdge<K, V>(this, vertex, weight);
+			GraphEdge<K, V,A> edge = new GraphEdge<K, V,A>(this, vertex, weight,label);
 			vertex.addEdgeFrom(edge);
 			edgesTo.addAlFinal(edge);
 		}
 	}
 	
-	public void addEdgeFrom(GraphEdge<K, V> e)
+	public void addEdgeFrom(GraphEdge<K, V,A> e)
 	{
 		edgesFrom.addAlFinal(e);
 	}
 	
-	public void removeEdge(GraphEdge<K, V> e)
+	public void removeEdge(GraphEdge<K, V,A> e)
 	{
 		edgesTo.remove(e);
 	}
 
 	@Override
-	public int compareTo(GraphVertex<K, V> vertex) 
+	public int compareTo(GraphVertex<K, V,A> vertex) 
 	{
 		return key.compareTo(vertex.getKey());
 	}

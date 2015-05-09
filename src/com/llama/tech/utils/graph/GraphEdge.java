@@ -20,41 +20,51 @@
 
 package com.llama.tech.utils.graph;
 
-public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>> 
+public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A> 
 {
 	private double weight;
+	private A label;
 	
-	private GraphVertex<K, V> origin;
-	private GraphVertex<K, V> destination;
+	private GraphVertex<K, V,A> origin;
+	private GraphVertex<K, V,A> destination;
 	
-	public GraphEdge(GraphVertex<K, V> from, GraphVertex<K, V> to, double weight)
+	public GraphEdge(GraphVertex<K, V,A> from, GraphVertex<K, V,A> to, double weight, A label)
 	{
 		origin = from;
 		destination = to;
 		this.weight = weight;
+		this.label = label;
 	}
 	
-	public GraphVertex<K, V> getDestination() 
+	public GraphVertex<K, V,A> getDestination() 
 	{
 		return destination;
 	}
 	
+	public A getLabel() {
+		return label;
+	}
+
+	public void setLabel(A label) {
+		this.label = label;
+	}
+
 	public double getWeight()
 	{
 		return weight;
 	}
 	
-	public GraphVertex<K, V> getOrigin() 
+	public GraphVertex<K, V,A> getOrigin() 
 	{
 		return origin;
 	}
 
-	public void setOrigin(GraphVertex<K, V> origin) 
+	public void setOrigin(GraphVertex<K, V,A> origin) 
 	{
 		this.origin = origin;
 	}
 
-	public void setDestination(GraphVertex<K, V> destination) 
+	public void setDestination(GraphVertex<K, V,A> destination) 
 	{
 		this.destination = destination;
 	}

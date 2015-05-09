@@ -22,7 +22,7 @@ package com.llama.tech.utils.queue;
 
 public class LlamaHeap<V, P extends Comparable<P>> 
 {
-	private HeapNode<V, P> root;
+	public HeapNode<V, P> root;
 	private int size = 0;
 	
 	public V pop()
@@ -48,6 +48,7 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		{
 			root = root.mergeHeap(subHeap);	
 		}
+		
 		size++;
 	}
 	
@@ -62,13 +63,18 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		heap.push(2.3, 3.0);
 		heap.push(90.0, 40.0);
 		heap.push(2.71, 2.5);
+		heap.push(1e6, -23000.3);
 		heap.push(3.14, 1.0);
 		heap.push(1.3, 2.0);
 		heap.push(10000.0, 160.0);
+		heap.push(20000.0, -1.0);
+		heap.push(2e4, -999.0);
+		heap.push(6e-6, 1000000.0);
 		
 		while(!heap.isEmpty())
 		{
-			System.out.println(heap.pop());
+			Double value = heap.pop();
+			System.out.println(value);
 		}
     }
 

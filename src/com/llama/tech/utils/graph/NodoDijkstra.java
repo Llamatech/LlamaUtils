@@ -1,16 +1,16 @@
 package com.llama.tech.utils.graph;
 
-public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>> implements Comparable<NodoDijkstra<K, V>> {
+public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>,A> implements Comparable<NodoDijkstra<K, V,A>> {
 	
-	private GraphVertex<K, V> v;
+	private GraphVertex<K, V,A> v;
 	private double minCost;
-	private NodoDijkstra<K,V> pred;
+	private NodoDijkstra<K,V,A> pred;
 	private boolean visited;
 	
-	public GraphVertex<K, V> getV() {
+	public GraphVertex<K, V,A> getV() {
 		return v;
 	}
-	public void setV(GraphVertex<K, V> v) {
+	public void setV(GraphVertex<K, V,A> v) {
 		this.v = v;
 	}
 	public double getMinCost() {
@@ -19,20 +19,20 @@ public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>> imp
 	public void setMinCost(double minCost) {
 		this.minCost = minCost;
 	}
-	public NodoDijkstra<K,V> getPred() {
+	public NodoDijkstra<K,V,A> getPred() {
 		return pred;
 	}
-	public void setPred(NodoDijkstra<K,V> pred) {
+	public void setPred(NodoDijkstra<K,V,A> pred) {
 		this.pred = pred;
 	}
-	public NodoDijkstra(GraphVertex<K, V> v, double minCost) {
+	public NodoDijkstra(GraphVertex<K, V,A> v, double minCost) {
 		this.v = v;
 		this.minCost = minCost;
 		visited = false;
 	}
 	
 	@Override
-	public int compareTo(NodoDijkstra<K, V> o) {
+	public int compareTo(NodoDijkstra<K, V,A> o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -8,7 +8,7 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 	private P priority;
 
 
-	private HeapNode<V, P> child;
+	public HeapNode<V, P> child;
 	private HeapNode<V, P> right;
 	
 	
@@ -31,19 +31,30 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 		if(child != null)
 		{
 			HeapNode<V, P> act_node = child;
-			child = null;
+			//child = null;
 
 			LlamaArrayList<HeapNode<V, P> > list = new LlamaArrayList<HeapNode<V, P>>(10);
+			
 			n_heap = new HeapNode<V, P>(act_node.data, act_node.priority);
-			while(act_node.right != null)
+			n_heap.child = act_node.child;
+			
+			if(act_node.right == null)
 			{
+				return n_heap;
+			}
+			
+			while(act_node.right != null)
+			{	
 				act_node = act_node.right;
-				n_heap = n_heap.mergeHeap(new HeapNode<V, P>(act_node.data, act_node.priority));
+				HeapNode<V, P> temp = new HeapNode<V, P>(act_node.data, act_node.priority);
+				temp.child = act_node.child;
+				n_heap = n_heap.mergeHeap(temp);
 				list.addAlFinal(n_heap);
 				if(act_node.right != null)
 				{
 					act_node = act_node.right;
 					n_heap = new HeapNode<V, P>(act_node.data, act_node.priority);
+					n_heap.child = act_node.child;
 					if(act_node.right == null)
 					{
 						list.addAlFinal(n_heap);
@@ -54,7 +65,6 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 			n_heap = list.getLast();
 			for(int i = list.size()-2; i >= 0; i--)
 			{
-				System.out.println(i);
 				n_heap = n_heap.mergeHeap(list.get(i));
 			}
 			
@@ -101,5 +111,11 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 	{
 		return priority.compareTo(o.priority);
 	}	
+	
+	@Override 
+	public String toString()
+	{
+		return "Value: "+data.toString()+"; Priority: "+priority.toString();
+	}
 	    
 }
