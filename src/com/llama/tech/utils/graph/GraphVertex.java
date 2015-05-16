@@ -20,16 +20,22 @@
 
 package com.llama.tech.utils.graph;
 
+import java.util.Iterator;
+
+import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
+import co.edu.uniandes.cupi2.estructuras.grafoDirigido.ICamino;
+import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IVertice;
+
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V,A>>
+public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V,A>>, IVertice<K, V, A>
 {
 	private K key;
 	private V value;
 	
 	private boolean visited = false;
-	private Lista<GraphEdge<K, V,A>> edgesTo;
+	private Lista<IArco<K, V,A>> edgesTo;
 	private Lista<GraphEdge<K, V,A>> edgesFrom;
 
 	
@@ -37,11 +43,11 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 	{
 		this.key = key;
 		this.value = value;
-		edgesTo = new LlamaArrayList<GraphEdge<K, V,A>>(5);
+		edgesTo = new LlamaArrayList<IArco<K, V,A>>(5);
 		edgesFrom = new LlamaArrayList<GraphEdge<K, V,A>>(5);
 	}
 	
-	public Lista<GraphEdge<K, V,A>> getEdgesTo()
+	public Lista<IArco<K, V,A>> getEdgesTo()
 	{
 		return edgesTo;
 	}
@@ -51,12 +57,12 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 		return edgesFrom;
 	}
 	
-	public K getKey()
+	public K darId()
 	{
 		return key;
 	}
 	
-	public V getValue()
+	public V darValor()
 	{
 		return value;
 	}
@@ -66,17 +72,17 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 		value = val;
 	}
 	
-	public boolean isVisited()
+	public boolean darMarca()
 	{
 		return visited;
 	}
 	
-	public void visit()
+	public void marcar()
 	{
 		visited = true;
 	}
 	
-	public void unVisit()
+	public void desmarcar()
 	{
 		visited = false;
 	}
@@ -87,12 +93,14 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 		//TODO
 	}
 
-	public void addEdge(GraphVertex<K, V,A> vertex, int weight, A label)
+	public void addEdge(IVertice<K, V,A> vert, double weight, A label)
 	{
 		boolean modified = false;
-		for(GraphEdge<K, V,A> edge: edgesTo)
+		GraphVertex<K, V,A> vertex = (GraphVertex<K, V,A>) vert;
+		for(IArco<K, V,A> edg: edgesTo)
 		{
-			if(edge.getDestination().compareTo(vertex) == 0)
+			GraphEdge<K, V,A> edge = (GraphEdge<K, V,A>) edg;
+			if(edge.darDestino().compareTo(vertex) == 0)
 			{
 				edge.setWeight(weight);
 				edge.setLabel(label);
@@ -114,14 +122,86 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 		edgesFrom.addAlFinal(e);
 	}
 	
-	public void removeEdge(GraphEdge<K, V,A> e)
+	public IArco<K,V,A> removeEdge(GraphEdge<K, V,A> e)
 	{
-		edgesTo.remove(e);
+		return edgesTo.remove(e);
 	}
 
 	@Override
 	public int compareTo(GraphVertex<K, V,A> vertex) 
 	{
-		return key.compareTo(vertex.getKey());
+		return key.compareTo(vertex.darId());
+	}
+
+	@Override
+	public ICamino<K, V, A> darCaminoMasBarato(K arg0) {
+		CaminoMinimo<K, V, A> caminoMinimo = CaminoMinimo.getInstance();
+		caminoMinimo.setOrigin(this);
+		caminoMinimo.initialize();
+		caminoMinimo.calcularCaminosMinimos();
+		caminoMinimo.reconstruirCaminosMinimos();
+		return caminoMinimo.darCaminoMinimo(arg0);
+		
+	}
+
+	@Override
+	public ICamino<K, V, A> darCaminoMenorLongitud(K arg0) {
+		
+		GraphVertex<K, V, A> actual = this;
+		GraphVertex<K, V, A> anterior = null;
+		Lista<IVertice<K, V, A>> vertices = new LlamaArrayList<IVertice<K,V,A>>(10);
+		Lista<IArco<K, V, A>> arcos = new LlamaArrayList<IArco<K,V,A>>(10);
+		int longitud =0;
+		double costo = 0;
+		Lista<GraphVertex<K, V, A>> cola = new LlamaArrayList<>(10);
+//		cola.addAlFinal(this);
+		
+		while(!cola.isEmpty())
+		{
+			
+			actual.marcar();
+			vertices.addAlFinal(actual);
+			longitud++;
+			if(actual!=this)
+			{
+				arcos.addAlFinal(anterior.darSucesor(actual.darId()));
+				costo += anterior.darSucesor(actual.darId()).darCosto();
+			}
+			
+			for(IArco<K, V,A> ed:actual.getEdgesTo())
+			{
+				GraphEdge<K, V, A> e = (GraphEdge<K, V, A>) ed;
+				if(e.darDestino().darId().equals(arg0))
+				{
+					vertices.addAlFinal(e.darDestino());
+					longitud++;
+					arcos.addAlFinal(actual.darSucesor(e.darDestino().darId()));
+					costo += actual.darSucesor(e.darDestino().darId()).darCosto();
+					return new Camino<K,V,A>(arcos, vertices, costo, longitud);
+				}
+				if(!e.darDestino().darMarca())
+				{
+					cola.addAlFinal(e.darDestino());
+				}
+			}
+			
+			anterior = actual;
+			actual = cola.removeFirst();
+			
+		}
+		return null;
+		
+	}
+
+
+	@Override
+	public IArco<K, V, A> darSucesor(K arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<IArco<K, V, A>> darSucesores() {
+		return edgesTo.iterator();
 	}
 }

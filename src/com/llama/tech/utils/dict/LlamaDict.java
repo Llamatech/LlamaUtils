@@ -30,7 +30,7 @@ import com.llama.tech.utils.list.ListaDoblementeEnlazada;
 import com.llama.tech.utils.list.LlamaArrayList;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends XMLFormat implements Dictionary<K, V>, Serializable, Comparable<LlamaDict<K, V>>
+public class LlamaDict<K extends Comparable<K>, V > extends XMLFormat implements Dictionary<K, V>, Serializable, Comparable<LlamaDict<K, V>>
 {
 	 /**
 	 * 
@@ -143,7 +143,6 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 		 
 		 if(rem != null)
 		 {
-			 System.out.println("Yep");
 			 size--;
 		 }
 		 
@@ -168,9 +167,9 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 	 }
 	 
 	 @Override
-	 public LlamaIterator<V> getValues()
+	 public Iterator<V> getValues()
 	 {
-		 ListaDoblementeEnlazada<V> l = new ListaDoblementeEnlazada<V>();
+		 Lista<V> l = new ListaDoblementeEnlazada<V>();
 		 for(int i = 0; i < mainArea.size(); i++)
 		 {
 			 DictEntry<K, V> entry = mainArea.get(i);
@@ -236,7 +235,7 @@ public class LlamaDict<K extends Comparable<K>, V extends Comparable<V>> extends
 	            }
 	
 	            LlamaIterator<K> keys = getKeys();
-	            LlamaIterator<V> values = getValues();
+	            Iterator<V> values = getValues();
 	
 	            while(keys.hasNext())
 	            {

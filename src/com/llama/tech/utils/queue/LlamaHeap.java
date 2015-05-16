@@ -52,6 +52,11 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		size++;
 	}
 	
+	public void decreasePriority(V value, P priorityValue)
+	{
+		root = root.decreasePriority(value, priorityValue);
+	}
+
 	public boolean isEmpty()
 	{
 		return size == 0;
@@ -71,11 +76,8 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		heap.push(2e4, -999.0);
 		heap.push(6e-6, 1000000.0);
 		
-		while(!heap.isEmpty())
-		{
-			Double value = heap.pop();
-			System.out.println(value);
-		}
+		heap.decreasePriority(1e6, 1e8);
+		System.out.println(heap.pop());
     }
 
 }

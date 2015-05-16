@@ -22,12 +22,13 @@ package com.llama.tech.utils.dict;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 
 import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> extends Serializable, Iterable<K>
+public interface Dictionary<K extends Comparable<K>, V> extends Serializable, Iterable<K>
 {
 	/**
 	 * Retorna el valor que corresponde a la llave dada por parámetro. 
@@ -72,7 +73,7 @@ public interface Dictionary<K extends Comparable<K>, V extends Comparable<V>> ex
 	  * Retorna un iterador sobre los valores de la tabla
 	  * @return iterador de valores
 	  */
-	 public LlamaIterator<V> getValues();
+	 public Iterator<V> getValues();
 	 
 	 /**
 	  * Retorna los valores del área principal en un string concatenado

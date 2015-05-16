@@ -20,7 +20,10 @@
 
 package com.llama.tech.utils.graph;
 
-public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A> 
+import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
+import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IVertice;
+
+public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A> implements IArco<K, V, A>
 {
 	private double weight;
 	private A label;
@@ -36,12 +39,12 @@ public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A>
 		this.label = label;
 	}
 	
-	public GraphVertex<K, V,A> getDestination() 
+	public GraphVertex<K, V,A> darDestino() 
 	{
 		return destination;
 	}
 	
-	public A getLabel() {
+	public A darInfoArco() {
 		return label;
 	}
 
@@ -49,12 +52,12 @@ public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A>
 		this.label = label;
 	}
 
-	public double getWeight()
+	public double darCosto()
 	{
 		return weight;
 	}
 	
-	public GraphVertex<K, V,A> getOrigin() 
+	public GraphVertex<K, V,A> darOrigen() 
 	{
 		return origin;
 	}
@@ -72,7 +75,5 @@ public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A>
 	public void setWeight(double weight)
 	{
 		this.weight = weight;
-	}
-	
-	
+	}	
 }

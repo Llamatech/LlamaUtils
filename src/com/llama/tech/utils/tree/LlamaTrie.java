@@ -37,7 +37,7 @@ import com.llama.tech.utils.dict.LlamaDict.UnhashableTypeException;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class LlamaTrie<T> extends XMLFormat
+public class LlamaTrie<T> extends XMLFormat implements ITrie<T>
 {	
 	public TrieNode<T> root;
 	private LlamaDict<Character,String> distinguished_sym = new LlamaDict<Character,String>(20);
@@ -145,7 +145,7 @@ public class LlamaTrie<T> extends XMLFormat
 		return root.buscar(word	, 0);
 	}
 
-
+	@Override
 	public Iterator<String> eliminarPalabrasConPrefijo(String p)
 	{
 		Lista<String> lista = new LlamaArrayList<String>(50);
@@ -153,19 +153,21 @@ public class LlamaTrie<T> extends XMLFormat
 		return new LlamaTrieIterator<String>(lista);
 	}
 
-	
+	@Override
 	public void agregar(String arg0, T arg1) 
 	{
 		agregarT(arg0, arg1);
 
 	}
 
+	@Override
 	public Iterator<String> buscarPalabrasConPrefijo(String p) {
 		Lista<String> lista = new LlamaArrayList<String>(50);
 		root.buscarPrefijo(p, lista, 0, false, "");
 		return lista.iterator();
 	}
 
+	@Override
 	public int darNumeroPalabras() 
 	{
 		return root.getSize();

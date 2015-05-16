@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 import com.llama.tech.utils.list.Lista;
 
-public class DictEntry<K extends Comparable<K>, V extends Comparable<V>> implements Serializable, Comparable<DictEntry<K, V>>
+public class DictEntry<K extends Comparable<K>, V> implements Serializable, Comparable<DictEntry<K, V>>
 {
 	/**
 	 * 

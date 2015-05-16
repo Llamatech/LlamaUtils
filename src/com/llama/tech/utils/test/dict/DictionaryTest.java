@@ -1,5 +1,6 @@
 package com.llama.tech.utils.test.dict;
 
+import java.util.Iterator;
 import java.util.Random;
 
 import com.llama.tech.utils.dict.Dictionary;
@@ -81,7 +82,7 @@ public class DictionaryTest extends TestCase
 					
 				}
 				
-				LlamaIterator<Integer> itV = dict.getValues();
+				Iterator<Integer> itV = dict.getValues();
 				
 				while(itV.hasNext())
 				{

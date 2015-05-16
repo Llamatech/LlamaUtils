@@ -18,6 +18,11 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 		this.priority = priority;
 	}
 	
+	public void setPriority(P priority)
+	{
+		this.priority = priority;
+	}
+	
 	public V getValue()
 	{
 		return data;
@@ -105,6 +110,125 @@ public class HeapNode<V, P extends Comparable<P>> implements Comparable<HeapNode
 			return subHeap;
 		}
 	}
+	
+	public HeapNode<V, P> decreasePriority(V value, P priority) 
+	{
+		HeapNode<V, P> node = this;
+		//Yo soy la raíz
+		if(this.data.equals(value))
+		{
+			if(this.priority.compareTo(priority) > 0)
+			{
+				this.priority = priority; 
+				return this;
+			}
+			else
+			{
+				HeapNode<V, P> temp = new HeapNode<V, P>(value, priority);
+				if(child != null)
+				{
+					HeapNode<V, P> root = this.removeMin(); 
+					root = root.mergeHeap(temp);
+					return root;
+				}
+				return temp;
+			}
+		}
+			
+	    if(child != null)
+		{
+	    	LlamaArrayList<HeapNode<V, P>> prevL = new LlamaArrayList<HeapNode<V, P>>(1); 
+			HeapNode<V, P> act = getNode(value, prevL);
+			HeapNode<V, P> prev = prevL.getFirst();
+			
+			if(act != null)
+			{
+				if(this.priority.compareTo(priority) > 0)
+				{
+					//Respecto a la raíz
+					HeapNode<V, P> temp = new HeapNode<V, P>(value, priority);
+					if(prev != null)
+					{
+						prev.right = act.right;
+						act.right = null;
+					}
+					act = act.removeMin();
+					if(act != null)
+					{
+						act = act.mergeHeap(temp);
+						temp = this.mergeHeap(act);
+					}
+					else
+					{
+						temp = this.mergeHeap(temp);
+					}
+					return temp;
+				}
+				else
+				{
+					//Respecto al subheap
+					HeapNode<V, P> yeOldeRight = act.right;
+					act = act.decreasePriority(value, priority);
+					act.right = yeOldeRight;
+					prev.right = act;
+				}
+			}
+		}
+		
+		return node;
+	}
+	
+    public boolean contains(V value)
+    {
+    	boolean found = false;
+    	
+    	if(this.data.equals(value))
+    	{
+    		found = true;
+    	}
+    	
+    	if(this.child != null)
+    	{
+    		found = found || child.contains(value);
+    	}
+    	
+    	if(this.right != null)
+    	{
+    		found = found || right.contains(value);
+    	}
+    	
+    	return found;    	
+    }
+    
+    private HeapNode<V, P> getNode(V value, LlamaArrayList<HeapNode<V, P>> stack)
+    {
+    	HeapNode<V, P> req = null;
+    	
+    	if(this.data.equals(value))
+    	{
+    		return this;
+    	}
+    	
+    	if(child != null)
+    	{
+    		req = child.getNode(value, stack);
+    	}
+    	
+    	if(req == null)
+    	{
+    		if(right != null)
+    		{
+    			req = right.getNode(value, stack);
+    		}
+    	}
+    	else
+    	{
+    		stack.addAlFinal(this);
+    	}
+    	return req;
+    }
+    
+    
 
 	@Override
 	public int compareTo(HeapNode<V, P> o) 
