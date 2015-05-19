@@ -20,6 +20,7 @@
 
 package com.llama.tech.utils.graph;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
@@ -35,7 +36,7 @@ import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 import com.llama.tech.utils.list.LlamaIterator;
 
-public class LlamaGraph<K extends Comparable<K>, V extends Comparable<V>,A> implements IGrafoDirigido<K, V, A>
+public class LlamaGraph<K extends Comparable<K>, V extends Comparable<V>,A> implements IGrafoDirigido<K, V, A>, Serializable
 {
 	private Dictionary<K, IVertice<K,V,A>> vertices;
 	private int numEdges = 0;
@@ -45,6 +46,7 @@ public class LlamaGraph<K extends Comparable<K>, V extends Comparable<V>,A> impl
 	public LlamaGraph()
 	{
 		vertices = new LlamaDict<K, IVertice<K, V,A>>(10);
+		CaminoMinimo.initializeInstance(this);
 	}
 	
 	public boolean agregarVertice(K key, V value)
@@ -173,6 +175,7 @@ public class LlamaGraph<K extends Comparable<K>, V extends Comparable<V>,A> impl
 		
 		return null;
 	}
+	
 
 	@Override
 	public ICamino<K, V, A> darCaminoMasBarato(K arg0, K arg1) 
@@ -196,7 +199,8 @@ public class LlamaGraph<K extends Comparable<K>, V extends Comparable<V>,A> impl
 		GraphVertex<K, V, A> origin = ((GraphVertex<K, V, A>) vertices.getValue(arg0));
 		CaminoMinimo<K,V,A> shortestRoute = CaminoMinimo.getInstance();
 		shortestRoute.setOrigin(origin);
-		shortestRoute.calcularCaminosMinimos();
+		shortestRoute.dijkstra();
+		shortestRoute.reconstructPath();
 		return shortestRoute;
 	}
 

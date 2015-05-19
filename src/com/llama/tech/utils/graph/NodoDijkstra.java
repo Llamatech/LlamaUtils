@@ -1,6 +1,8 @@
 package com.llama.tech.utils.graph;
 
-public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>,A> implements Comparable<NodoDijkstra<K, V,A>> {
+import java.io.Serializable;
+
+public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>,A> implements Comparable<NodoDijkstra<K, V,A>>, Serializable {
 	
 	private GraphVertex<K, V,A> v;
 	private double minCost;
@@ -37,6 +39,18 @@ public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>,A> i
 		return 0;
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		NodoDijkstra<K, V, A> n = ((NodoDijkstra<K, V,A>) o);
+		if(n.v.compareTo(v) == 0)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void visit()
 	{
 		visited= true;
@@ -52,8 +66,11 @@ public class NodoDijkstra <K extends Comparable<K>, V extends Comparable<V>,A> i
 		return visited;
 	}
 
-	
-	
+	@Override
+	public String toString()
+	{
+		return v.darId()+"- Pred: "+((pred == null) ? "" : pred.v.darId())+"; Cost: "+minCost;
+	}
 	
 
 

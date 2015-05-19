@@ -123,7 +123,6 @@ public class LlamaDict<K extends Comparable<K>, V > extends XMLFormat implements
 			 }
 			 else
 			 {
-				 System.out.println("Then, there");
 				 DictEntry<K, V> actual = primero.getNext();
 				 DictEntry<K, V> anterior = primero;
 				 while(rem == null && actual!=null)

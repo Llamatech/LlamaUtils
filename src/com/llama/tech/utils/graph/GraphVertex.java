@@ -20,6 +20,7 @@
 
 package com.llama.tech.utils.graph;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
@@ -29,7 +30,7 @@ import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IVertice;
 import com.llama.tech.utils.list.Lista;
 import com.llama.tech.utils.list.LlamaArrayList;
 
-public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V,A>>, IVertice<K, V, A>
+public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> implements Comparable<GraphVertex<K, V,A>>, IVertice<K, V, A>, Serializable
 {
 	private K key;
 	private V value;
@@ -134,12 +135,15 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 	}
 
 	@Override
-	public ICamino<K, V, A> darCaminoMasBarato(K arg0) {
+	public ICamino<K, V, A> darCaminoMasBarato(K arg0) 
+	{
 		CaminoMinimo<K, V, A> caminoMinimo = CaminoMinimo.getInstance();
 		caminoMinimo.setOrigin(this);
-		caminoMinimo.initialize();
-		caminoMinimo.calcularCaminosMinimos();
-		caminoMinimo.reconstruirCaminosMinimos();
+		caminoMinimo.dijkstra();
+		caminoMinimo.reconstructPath();
+		//caminoMinimo.initialize();
+		//caminoMinimo.calcularCaminosMinimos();
+		//caminoMinimo.reconstruirCaminosMinimos();
 		return caminoMinimo.darCaminoMinimo(arg0);
 		
 	}
@@ -203,5 +207,11 @@ public class GraphVertex<K extends Comparable<K>, V extends Comparable<V>, A> im
 	@Override
 	public Iterator<IArco<K, V, A>> darSucesores() {
 		return edgesTo.iterator();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "Id: "+key+"; Value: "+value;
 	}
 }

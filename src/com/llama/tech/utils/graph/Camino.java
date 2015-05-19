@@ -1,5 +1,6 @@
 package com.llama.tech.utils.graph;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import com.llama.tech.utils.list.Lista;
@@ -8,7 +9,7 @@ import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.ICamino;
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IVertice;
 
-public class Camino<K,V,A> implements ICamino<K, V, A> 
+public class Camino<K,V,A> implements ICamino<K, V, A> , Serializable
 {
 	
 	private Lista<IArco<K,V,A>> arcos;
@@ -50,6 +51,12 @@ public class Camino<K,V,A> implements ICamino<K, V, A>
 	public Iterator<IVertice<K, V, A>> darVertices() 
 	{
 		return vertices.iterator();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return vertices.toString();
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.llama.tech.utils.list.LlamaArrayList;
 
+@SuppressWarnings("rawtypes")
 public class LlamaTuple<X, Y> implements Comparable<LlamaTuple<X, Y>>, Iterable
 { 
     public final X x; 
@@ -20,7 +21,8 @@ public class LlamaTuple<X, Y> implements Comparable<LlamaTuple<X, Y>>, Iterable
         return "(" + x + "," + y + ")";
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public boolean equals(Object other) {
         if (other == null) {
             return false;
@@ -56,6 +58,7 @@ public class LlamaTuple<X, Y> implements Comparable<LlamaTuple<X, Y>>, Iterable
 		return -1;
 	}
 
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public Iterator iterator() 
 	{

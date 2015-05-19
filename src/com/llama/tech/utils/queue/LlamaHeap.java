@@ -62,6 +62,15 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		return size == 0;
 	}
 	
+	public boolean contains(V value)
+	{
+		if(root != null)
+		{
+			return root.contains(value);
+		}
+		return false;
+	}
+	
 	public static void main(String... args)
 	{
 		LlamaHeap<Double, Double> heap = new LlamaHeap<Double, Double>();
@@ -76,7 +85,16 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		heap.push(2e4, -999.0);
 		heap.push(6e-6, 1000000.0);
 		
-		heap.decreasePriority(1e6, 1e8);
+		//heap.decreasePriority(1e6, 1e8);
+		System.out.println(heap.pop());
+		heap.decreasePriority(1.3, -1000.0);
+		System.out.println(heap.pop());
+		heap.decreasePriority(6e-6, -1000000.0);
+		System.out.println(heap.pop());
+		heap.decreasePriority(10000.0, -160.0e45);
+		System.out.println(heap.pop());
+		heap.decreasePriority(2.71, -0.9);
+		System.out.println(heap.pop());
 		System.out.println(heap.pop());
     }
 

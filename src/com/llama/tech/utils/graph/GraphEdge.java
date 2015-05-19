@@ -20,10 +20,12 @@
 
 package com.llama.tech.utils.graph;
 
+import java.io.Serializable;
+
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IArco;
 import co.edu.uniandes.cupi2.estructuras.grafoDirigido.IVertice;
 
-public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A> implements IArco<K, V, A>
+public class GraphEdge<K extends Comparable<K>, V extends Comparable<V>, A> implements IArco<K, V, A>, Serializable
 {
 	private double weight;
 	private A label;
