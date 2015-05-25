@@ -20,11 +20,26 @@
 
 package com.llama.tech.utils.queue;
 
+/**
+ * Implementación de un Heap de Emparejamiento (Min-Heap).
+ * @author LlamaTech
+ *
+ * @param <V> Valor a almacenar.
+ * @param <P> Valor de prioridad.
+ */
+
 public class LlamaHeap<V, P extends Comparable<P>> 
 {
+	/**
+	 * Atributos del Heap.
+	 */
 	public HeapNode<V, P> root;
 	private int size = 0;
 	
+	/**
+	 * Obtiene el elemento de menor prioridad que se encuentra en el Heap.
+	 * @return El elemento de menor prioridad, null si no hay elementos.
+	 */
 	public V pop()
 	{
 		if(root != null)
@@ -37,6 +52,11 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		return null;
 	}
 	
+	/**
+	 * Agrega un elemento con prioridad priorityValue al heap.
+	 * @param value Valor del elemento.
+	 * @param priorityValue Valor de prioridad.
+	 */
 	public void push(V value, P priorityValue)
 	{
 		HeapNode<V, P> subHeap = new HeapNode<V, P>(value, priorityValue);
@@ -52,16 +72,30 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		size++;
 	}
 	
+	/**
+	 * Reduce la prioridad de un elemento que se encuentra en el heap.
+	 * @param value Valor del elemento.
+	 * @param priorityValue Nueva prioridad a asignar.
+	 */
 	public void decreasePriority(V value, P priorityValue)
 	{
 		root = root.decreasePriority(value, priorityValue);
 	}
 
+	/**
+	 * Establece si el heap se encuentra sin elementos.
+	 * @return true si no contiene elementos, false de lo contrario. 
+	 */
 	public boolean isEmpty()
 	{
 		return size == 0;
 	}
 	
+	/**
+	 * Establece si el heap contiene un elemento dado.
+	 * @param value El elemento a buscar.
+	 * @return true si se encuentra en el heap, false de lo contrario.
+	 */
 	public boolean contains(V value)
 	{
 		if(root != null)
@@ -70,32 +104,5 @@ public class LlamaHeap<V, P extends Comparable<P>>
 		}
 		return false;
 	}
-	
-	public static void main(String... args)
-	{
-		LlamaHeap<Double, Double> heap = new LlamaHeap<Double, Double>();
-		heap.push(2.3, 3.0);
-		heap.push(90.0, 40.0);
-		heap.push(2.71, 2.5);
-		heap.push(1e6, -23000.3);
-		heap.push(3.14, 1.0);
-		heap.push(1.3, 2.0);
-		heap.push(10000.0, 160.0);
-		heap.push(20000.0, -1.0);
-		heap.push(2e4, -999.0);
-		heap.push(6e-6, 1000000.0);
-		
-		//heap.decreasePriority(1e6, 1e8);
-		System.out.println(heap.pop());
-		heap.decreasePriority(1.3, -1000.0);
-		System.out.println(heap.pop());
-		heap.decreasePriority(6e-6, -1000000.0);
-		System.out.println(heap.pop());
-		heap.decreasePriority(10000.0, -160.0e45);
-		System.out.println(heap.pop());
-		heap.decreasePriority(2.71, -0.9);
-		System.out.println(heap.pop());
-		System.out.println(heap.pop());
-    }
 
 }
